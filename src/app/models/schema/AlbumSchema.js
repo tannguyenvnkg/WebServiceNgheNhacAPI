@@ -5,7 +5,7 @@ const Singer = require('./SingerSchema');
 const ListSong = require('./SongSchema');
 
 const Album = new Schema({
-    _id: String,
+    // _id: String,
     albumname: String,
     singer: [Singer],
     listsong: [ListSong]

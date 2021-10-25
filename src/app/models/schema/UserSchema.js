@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const Playlist = require('./PlaylistSchema');
 
 const User = new Schema({
-    _id: String,
+    // _id: String,
     username: String,
     password: String,
     name: String,
