@@ -26,7 +26,7 @@ class SearchSongController{
                 else {
                     res.json({
                         error: false,
-                        message: '',
+                        message: 'ko có lỗi anh ơi',
                         listsong
                     });
                 }
