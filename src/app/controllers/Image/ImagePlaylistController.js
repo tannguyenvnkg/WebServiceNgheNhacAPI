@@ -1,20 +1,20 @@
 const path = require('path');
 var fs = require('fs');
 
-class ImageSingerController {
+class ImagePlaylistController {
 
     // [GET] / 
     index(req, res) {
        res.json({error: true, message: 'Notthing Happened hihihi!!!!'});
     }
 
-    // [GET] /imagesinger/:imageName
+    // [GET] /imagePlaylist/:imageName
     display(req, res) {
         const imageName = req.params.imageName;
-        const pathImageSinger = path.join(__dirname, '../../../','public','image', 'singer', imageName);
+        const pathImagePlaylist = path.join(__dirname, '../../../','public','image', 'playlist', imageName);
 
        
-        var extname = path.extname(pathImageSinger);
+        var extname = path.extname(pathImagePlaylist);
         var contentType = 'text/html';
         switch (extname) {
             case '.png':
@@ -24,7 +24,7 @@ class ImageSingerController {
                 contentType = 'image/jpg';
                 break;
         }
-        fs.readFile(pathImageSinger, function(error, content) {
+        fs.readFile(pathImagePlaylist, function(error, content) {
             if (error) {
                 if(error.code == 'ENOENT'){
                     res.json({message: 'error ENOENT'});
@@ -44,4 +44,4 @@ class ImageSingerController {
     }
 }
 
-module.exports = new ImageSingerController;
+module.exports = new ImagePlaylistController;
