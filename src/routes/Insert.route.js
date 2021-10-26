@@ -7,10 +7,11 @@ const InsertPlaylistController = require('../app/controllers/Insert/InsertPlayli
 
 const {uploadImageSinger} = require('./Upload.multer');
 const {uploadImagePlaylist} = require('./Upload.multer');
-// const InsertControllerAutomaly = require('../app/controllers/InsertControllerAutomaly');
+
 
 
 // // auto insert and delete 
+// const InsertControllerAutomaly = require('../app/controllers/InsertControllerAutomaly');
 // router.use('/DeleteCategoryAutomaly',InsertControllerAutomaly.deleteCategoryAutomaly);
 // router.use('/DeleteSingerAutomaly',InsertControllerAutomaly.deleteSingerAutomaly);
 
