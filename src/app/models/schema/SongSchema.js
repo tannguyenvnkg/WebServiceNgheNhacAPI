@@ -5,7 +5,7 @@ const Category = require('./CategorySchema');
 const Singer = require('./SingerSchema');
 
 const Song = new Schema({
-    _id: Schema.Types.ObjectId,
+    // _id: Schema.Types.ObjectId,
     image: String,
     link: String,
     title: String,

@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const Category = require('./CategorySchema');
 
 const Playlist = new Schema({
-    _id: String,
+    // _id: String,
     playlistname: String,
     // singer: Singer, // object
     image: String,

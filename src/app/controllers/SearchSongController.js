@@ -12,7 +12,6 @@ class SearchSongController{
             Song.find({
                 $or:[
                     {title: new RegExp(title, 'i')},
-                    {description: new RegExp(title, 'i')},
                     {'category.categoryname': new RegExp(title, 'i')}
                 ]
             }).exec( function (err, listsong) {
