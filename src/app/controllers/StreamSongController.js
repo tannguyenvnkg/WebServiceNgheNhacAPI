@@ -19,7 +19,7 @@ class StreamSongController {
             });
         }
         else{
-            const pathSong = path.join(__dirname, '../../','public','music', songName);
+            const pathSong = path.join(__dirname, '../../','public','song', songName);
             mediaserver.pipe(req,res,pathSong);
         }
     }

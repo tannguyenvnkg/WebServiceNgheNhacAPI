@@ -10,7 +10,8 @@ const Playlist = new Schema({
     category: Category // object
  }, 
     {
-        versionKey: false
+        versionKey: false,
+        timestamps: true
     }
 );
  

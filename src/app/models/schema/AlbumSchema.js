@@ -11,7 +11,8 @@ const Album = new Schema({
     listsong: [ListSong]
 }, 
     {
-        versionKey: false
+        versionKey: false,
+        timestamps: true
     }
 );
  
