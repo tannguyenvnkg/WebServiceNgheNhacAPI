@@ -1,8 +1,9 @@
 const searchSongRouter = require('./SearchSong.route');
 const ListSongRouter = require('./ListSong.route');
 
-// sau này sẽ xóa
-const signInRouter = require('./SignIn.route');
+
+const logInRouter = require('./LogIn.route');
+const signUpRouter = require('./SignUp.route');
 
 // sau này sẽ xóa
 const StreamSongRouter = require('./StreamSong.route');
@@ -20,7 +21,9 @@ function route(app){
     app.use('/searchSong',searchSongRouter);
     app.use('/ListSong',ListSongRouter);
    
-    app.use('/signIn',signInRouter);
+    app.use('/LogIn',logInRouter);
+    app.use('/SignUp',signUpRouter);
+
     app.use('/StreamSong',StreamSongRouter);
     app.use('/Insert',InsertRouter); 
     app.use('/Image',ImageRouter); 
