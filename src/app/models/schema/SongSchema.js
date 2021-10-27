@@ -14,7 +14,8 @@ const Song = new Schema({
     playlistid: [String]
 }, 
     {
-        versionKey: false
+        versionKey: false,
+        timestamps: true
     }
 );
 
