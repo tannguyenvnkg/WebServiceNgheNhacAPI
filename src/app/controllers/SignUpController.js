@@ -16,6 +16,7 @@ class SignUpController {
             }
             if (listUser[0] !== undefined) {
                 res.json({error: true, message: 'Email này đã tồn tại'});
+                
             }
             else {             
                 // const user = new User({
@@ -32,13 +33,14 @@ class SignUpController {
                     password : mk,
                     sex : gioitinh,
                     email : email,
-                    followPlaylist : []
+                    //followPlaylist : []
                 }, function(err) {
                     if(err) {
                         res.json({error: true, message: err.message});
+                        console.log(err.message)
                     }
                     else {
-                        res.json({error: false, message: 'Insert Success'});
+                        res.json({error: false, message: 'Đăng Ký thành công'});
                     }
                 })
                 // const users = [user]
