@@ -4,6 +4,7 @@ const ListSongRouter = require('./ListSong.route');
 
 const logInRouter = require('./LogIn.route');
 const signUpRouter = require('./SignUp.route');
+const loadPlayList = require('./LoadPlayList.route');
 
 // sau này sẽ xóa
 const StreamSongRouter = require('./StreamSong.route');
@@ -23,6 +24,7 @@ function route(app){
    
     app.use('/LogIn',logInRouter);
     app.use('/SignUp',signUpRouter);
+    app.use('/LoadPlayList',loadPlayList);
 
     app.use('/StreamSong',StreamSongRouter);
     app.use('/Insert',InsertRouter); 
