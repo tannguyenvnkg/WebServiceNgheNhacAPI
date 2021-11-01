@@ -24,7 +24,7 @@ function route(app){
    
     app.use('/LogIn',logInRouter);
     app.use('/SignUp',signUpRouter);
-    app.use('/LoadPlayList',loadPlayList);
+    app.use('/getPlayList',loadPlayList);
 
     app.use('/StreamSong',StreamSongRouter);
     app.use('/Insert',InsertRouter); 

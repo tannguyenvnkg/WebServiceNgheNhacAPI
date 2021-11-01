@@ -5,7 +5,7 @@ class LoadPlayListController {
     
     // [GET] /PlayListAll
     index(req,res,next) {
-        Playlist.find({}, {'_id': 1, 'playlistname' : 1, 'image' : 1, 'category' : 1 }, function(err, listPlayList) {
+        Playlist.find({}, {}, function(err, listPlayList) {
             if(err) {
                 res.json({
                     error : true,
@@ -21,6 +21,8 @@ class LoadPlayListController {
             }
         })
     }
+
+    
 }
 
 module.exports = new LoadPlayListController;
