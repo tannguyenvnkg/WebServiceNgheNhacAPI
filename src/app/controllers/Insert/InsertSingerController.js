@@ -16,7 +16,7 @@ class InsertSingerController {
         console.log('req.file.pathname: ' + req.file.filename);
         console.log('req.body.singername: ' + req.body.singername);
 
-        req.body.image = req.headers.host + '/image/imagesinger/' + req.file.filename;
+        req.body.image = req.protocol + '://' + req.headers.host + '/image/imagesinger/' + req.file.filename;
         console.log(req.body);
         const singer = new Singer(req.body);
         singer.save()

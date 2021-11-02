@@ -4,7 +4,7 @@ class ListSongController {
 
     // [GET] /listsong
     index(req, res) {
-
+        if(Object.keys(req.query).length === 0) console.log('không có tham số truyền vào');
         Song.find({}, function (err, listSong) {
             if(!err) res.json( {
                 error: false,
@@ -16,7 +16,6 @@ class ListSongController {
                 message: err.message
             });
           });
-        
     }
 
     // [GET] /listsong/playlist?id='value'
