@@ -9,6 +9,11 @@
 </head>
 <body>
 
+{{#if isLogin}}
+    <div>
+        <a href="/admin/logout">đăng xuất</a>
+    </div>
+{{/if}}
     <div>
         {{{body}}}
     </div>
