@@ -4,7 +4,7 @@ class AdminController {
 
     // [GET] /admin/login
     login(req, res) {
-        if(req.session && (req.session.username == undefined)) res.render('login',{login: false}); // if admin still not login
+        if(req.session && (req.session.username == undefined)) res.render('login',{isLogin: false}); // if admin still not login
         else res.redirect('/'); // go to home if admin logged
     }
     // [POST] /admin/loginPost

@@ -10,17 +10,6 @@ const {uploadImageSinger} = require('./Upload.multer');
 const {uploadImagePlaylist} = require('./Upload.multer');
 const {uploadImageSong} = require('./Upload.multer');
 
-
-// // auto insert and delete 
-// const InsertControllerAutomaly = require('../app/controllers/InsertControllerAutomaly');
-// router.use('/DeleteCategoryAutomaly',InsertControllerAutomaly.deleteCategoryAutomaly);
-// router.use('/DeleteSingerAutomaly',InsertControllerAutomaly.deleteSingerAutomaly);
-
-// router.use('/InsertCategoryAutomaly',InsertControllerAutomaly.insertCategoryAutomaly);
-// router.use('/InsertSingerAutomaly',InsertControllerAutomaly.insertSingerAutomaly);
-// // ==========================================================================
-
-
 //insert category 
 router.get('/insertCategory',InsertCategoryController.insertCategory);
 router.post('/insertCategoryPost',InsertCategoryController.insertCategoryPost);
