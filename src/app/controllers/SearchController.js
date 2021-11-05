@@ -15,25 +15,24 @@ class SearchController{
             res.json({error: true,  message: 'Không có giá trị được truyền vào'});
         }
         else { 
-                
             Singer.find({singername: new RegExp(title, 'i')}).exec(function(err, singer) {
                 if(err){
                     res.json({error: true,  message: err.message});
                     return;
                 }    
-                else if(singer[0].singername !== undefined){ // if q is singers => find singer and return singer's listsong
+                else if((singer.length !== 0) && (singer[0].singername !== undefined)){ // if q is singers and array singers is not empty => find singer and return singer's listsong
                     Song.find({'singer.singername': new RegExp(title, 'i')}).exec(function(err,songs){
                         if(err){
                             res.json(err.message);
                             return;
-                        }else if(songs[0].title !== undefined){
+                        }else {
                             res.json({
                                 error: false,  
                                 message: '',
                                 singer,
                                 listsong: songs
                             });
-                        }    
+                        }
                     });
                 }
                 else { // if q is not singer => find song
@@ -41,46 +40,24 @@ class SearchController{
                         if(err){
                             res.json(err.message);
                             return;
-                        }else if(songs[0].title !== undefined){
+                        }else if((songs.length !== 0) && (songs[0].title !== undefined)){
                             res.json({
                                 error: false,  
                                 message: '',
                                 singer,
                                 listsong: songs
                             });
+                        }else{
+                            res.json({
+                                error: true,
+                                message: 'Không tìm thấy bài hát'
+                            });
                         }    
                     });
                 }          
             });
-
-            // Song.find({
-            //     $or:[
-            //         {title: new RegExp(title, 'i')},
-            //         {'category.categoryname': new RegExp(title, 'i')},
-            //         {'singer.singername': new RegExp(title, 'i')}
-            //     ]
-            // }).exec( function (err, listsong) {
-            //     if(err){
-            //         res.json(err.message);
-            //         return;
-            //     }    
-            //     else if(listsong[0] === undefined){
-            //         res.json({error: true,  message: 'không tìm thấy kết quả'});
-            //     }            
-            //     else if(listsong[0].title === undefined){
-            //         res.json({error: true,  message: 'không tìm thấy kết quả'});
-            //     }
-            //     else {
-            //         res.json({
-            //             error: false,
-            //             message: '',
-            //             listsong
-            //         });
-            //     }
-            // });
         }
     }
-
 }
 
 module.exports = new SearchController;
