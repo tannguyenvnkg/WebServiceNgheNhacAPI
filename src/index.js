@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const handlebars = require('express-handlebars');
+const sessions = require('express-session');
 
 const db = require('./config/db/index');
 // connect database
@@ -11,6 +12,15 @@ const route = require('./routes');
 const app = express();
 const port = 3000;
 
+//session
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(sessions({
+    secret: "teamusicsecretkey",
+    saveUninitialized:true,
+    cookie: { maxAge: oneDay },
+    resave: false 
+}));
+//=========================================
 
 app.use(morgan('combined'));
 app.use(express.static(path.join(__dirname, 'public'))); // check public directory
