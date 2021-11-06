@@ -7,7 +7,7 @@ const adminRouter = require('./Admin.route');
 const streamSongRouter = require('./StreamSong.route');
 const insertRouter = require('./Insert.route');
 const imageRouter = require('./Image.route');
-
+const manageRouter = require('./Manage.route');
 
 function route(app){
     
@@ -16,6 +16,7 @@ function route(app){
         else res.render('home',{isLogin: true}); // go to home if admin logged
     });
     app.use('/admin',adminRouter);
+    app.use('/manage',manageRouter);
     //================================================================
     
     //json 
