@@ -1,27 +1,21 @@
 {{> LinkManage}}
-<h1>Danh sách bài hát</h1>
+<h1>Danh sách Thể loại</h1>
 <div class="ml-3 mr-3">
     <table class="table table-striped table-bordered table-hover">
         <thead>
             <tr>
                 <th scope="col">Index</th>
-                <th scope="col">Tên bài hát</th>
-                <th scope="col">Ca sĩ</th>
+                <th scope="col">Tên thể loại</th>
                 <th scope="col">Chỉnh sửa</th>
             </tr>
         </thead>
         <tbody>
-            {{#each songs}}
+            {{#each categories}}
             <tr>
                 <th scope="row">{{sumIndex @index 1}}</th>
-                <td>{{this.title}}</td>
-                <td>
-                    {{#each this.singer}}
-                      {{this.singername}}
-                    {{/each}}
-                </td>
+                <td>{{this.categoryname}}</td>
                 <td> 
-                    <a href="/manage/Song/{{this._id}}">Sửa</a> |
+                    <a href="/manage/Category/{{this._id}}">Sửa</a> |
                     <a href="#">Xóa</a>
                 </td>
             </tr>

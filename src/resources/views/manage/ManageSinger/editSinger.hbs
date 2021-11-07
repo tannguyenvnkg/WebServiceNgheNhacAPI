@@ -1,0 +1,13 @@
+<h1>Sửa ca sĩ</h1>
+{{message}}
+<div class="mt-4 col-lg-6">
+    <form method="post" action="editSinger?_method=PUT" > 
+        <input type="hidden" name="idSinger" value="{{singer._id}}">
+        <div class="form-group">
+            <label for="singername">Tên ca sĩ</label>
+            <input type="text" name="singername" class="form-control col-lg-6" id="singername" placeholder="Tên ca sĩ" value="{{singer.singername}}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Sửa ca sĩ</button>
+        <a href="/manage/Singer" class="btn btn-primary">Trở lại</a>
+    </form>
+</div>

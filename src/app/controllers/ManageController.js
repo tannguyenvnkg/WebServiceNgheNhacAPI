@@ -7,8 +7,10 @@ const {mongooseToObject} = require('../../util/mongoose');
 const {removeNewObjectID} = require('../../util/RemoveNewObjectID');
 
 class ManageController {
+
+    //===================================================SONG==================================================
     // [GET] /manage/
-    index(req, res) {
+    listSong(req, res) {
         if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
         else { 
             Song.find({}).exec(function(err, songs) {
@@ -19,8 +21,8 @@ class ManageController {
             });
         }
     }
-    //[GET] /manage/edit/:idSong
-    edit(req, res){
+    //[GET] /manage/Song/:idSong
+    detailSong(req, res){
         var message = '';
         if(req.session.messageUpdateSong !== undefined)
             message = req.session.messageUpdateSong 
@@ -67,7 +69,7 @@ class ManageController {
         });
     }
 
-    //[PUT] /manage/edit/editSong
+    //[PUT] /manage/Song/editSong
     editSong(req, res){
         Category.find({_id: {$in: req.body.categoryId}}, function(err, categories){
             Singer.find({_id: {$in: req.body.singerId}}, function(err, singers){
@@ -81,11 +83,11 @@ class ManageController {
                         Song.updateOne({_id: req.body.idSong}, req.body)
                             .then(function(){
                                 req.session.messageUpdateSong = 'Sửa bài hát thành công';
-                                res.redirect('/manage/edit/'+ req.body.idSong);
+                                res.redirect('/manage/Song/'+ req.body.idSong);
                             })
                             .catch(function(err){
                                 req.session.messageUpdateSong = 'Sửa bài hát Thất bại';
-                                res.redirect('/manage/edit/'+ req.body.idSong);
+                                res.redirect('/manage/Song/'+ req.body.idSong);
                             });       
                     }else{
                         res.json({error: true, message: 'Sửa thất bại', error_message: err.message});
@@ -94,6 +96,146 @@ class ManageController {
             });
         });
     }
+    //===========================================================================================================
+
+
+
+    //===================================================SINGER==================================================
+    // [GET] /manage/Singer
+    listSinger(req, res) {
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        else { 
+            Singer.find({}).exec(function(err, singers) {
+                res.render('manage/ManageSinger/manageSinger', {
+                    isLogin: true,
+                    singers: mutipleMongooseToObject(singers),
+                }); 
+            });
+        }
+    }
+    //[GET] /manage/Singer/:idSinger
+    detailSinger(req, res){
+        var message = '';
+        if(req.session.messageUpdateSinger !== undefined)
+            message = req.session.messageUpdateSinger 
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        Singer.findOne({_id: req.params.idSinger}).exec(function(err, singer) { // get id singer to edit
+            if(singer === undefined) res.redirect('/manage/singer') // reload current website if singer is undefined
+            else{
+                res.render('manage/ManageSinger/editSinger',{
+                    isLogin: true,
+                    singer: mongooseToObject(singer),
+                    message
+                });
+            }
+        });
+    }
+
+    //[PUT] /manage/Singer/editSinger
+    editSinger(req, res){
+        Singer.updateOne({_id: req.body.idSinger}, req.body)
+            .then(function(){
+                req.session.messageUpdateSinger = 'Sửa ca sĩ thành công';
+                res.redirect('/manage/Singer/'+ req.body.idSinger);
+            })
+            .catch(function(err){
+                req.session.messageUpdateSinger = 'Sửa ca sĩ Thất bại';
+                res.redirect('/manage/Singer/'+ req.body.idSinger);
+            });    
+    }
+    //================================================================================================================
+
+    //=============================================     Playlist    ==================================================
+    // [GET] /manage/Playlist
+    listPlaylist(req, res) {
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        else { 
+            Playlist.find({}).exec(function(err, playlists) {
+                res.render('manage/ManagePlaylist/managePlaylist', {
+                    isLogin: true,
+                    playlists: mutipleMongooseToObject(playlists),
+                }); 
+            });
+        }
+    }
+
+    //[GET] /manage/Playlist/:idPlaylist
+    detailPlaylist(req, res){
+        var message = '';
+        if(req.session.messageUpdatePlaylist !== undefined)
+            message = req.session.messageUpdatePlaylist 
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        Playlist.findOne({_id: req.params.idPlaylist}).exec(function(err, playlist) { // get id singer to edit
+            if(playlist === undefined) res.redirect('/manage/playlist') // reload current website if singer is undefined
+            else{
+                res.render('manage/ManagePlaylist/editPlaylist',{
+                    isLogin: true,
+                    playlist: mongooseToObject(playlist),
+                    message
+                });
+            }
+        });
+    }
+
+    //[PUT] /manage/Playlist/editPlaylist
+    editPlaylist(req, res){
+        Playlist.updateOne({_id: req.body.idPlaylist}, req.body)
+            .then(function(){
+                req.session.messageUpdatePlaylist = 'Sửa playlist thành công';
+                res.redirect('/manage/Playlist/'+ req.body.idPlaylist);
+            })
+            .catch(function(err){
+                req.session.messageUpdatePlaylist = 'Sửa playlist Thất bại';
+                res.redirect('/manage/Playlist/'+ req.body.idPlaylist);
+            });    
+    }
+    //================================================================================================================
+
+    //=============================================     CATEGORY    ==================================================
+    // [GET] /manage/Category
+    listCategory(req, res) {
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        else { 
+            Category.find({}).exec(function(err, categories) {
+                res.render('manage/ManageCategory/manageCategory', {
+                    isLogin: true,
+                    categories: mutipleMongooseToObject(categories),
+                }); 
+            });
+        }
+    }
+
+    //[GET] /manage/Category/:idCategory
+    detailCategory(req, res){
+        var message = '';
+        if(req.session.messageUpdateCategory !== undefined)
+            message = req.session.messageUpdateCategory 
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        Category.findOne({_id: req.params.idCategory}).exec(function(err, category) { // get id singer to edit
+            if(category === undefined) res.redirect('/manage/category') // reload current website if singer is undefined
+            else{
+                res.render('manage/ManageCategory/editCategory',{
+                    isLogin: true,
+                    category: mongooseToObject(category),
+                    message
+                });
+            }
+        });
+    }
+
+    //[PUT] /manage/Category/editCategory
+    editCategory(req, res){
+        Category.updateOne({_id: req.body.idCategory}, req.body)
+            .then(function(){
+                req.session.messageUpdateCategory = 'Sửa thể loại thành công';
+                res.redirect('/manage/Category/'+ req.body.idCategory);
+            })
+            .catch(function(err){
+                req.session.messageUpdateCategory = 'Sửa thể loại Thất bại';
+                res.redirect('/manage/Category/'+ req.body.idCategory);
+            });    
+    }
+    //================================================================================================================
 }
 
 module.exports = new ManageController;
