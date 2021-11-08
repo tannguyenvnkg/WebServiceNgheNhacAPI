@@ -8,6 +8,8 @@ const streamSongRouter = require('./StreamSong.route');
 const insertRouter = require('./Insert.route');
 const imageRouter = require('./Image.route');
 const manageRouter = require('./Manage.route');
+const updateUserRoute = require('./UpdateUser.route')
+const updateUserPassowordRoute = require('./UpdateUserPassword.route');
 
 function route(app){
     
@@ -27,7 +29,9 @@ function route(app){
     app.use('/getPlayList',loadPlayList);
     app.use('/StreamSong',streamSongRouter);
     app.use('/Insert',insertRouter); 
-    app.use('/Image',imageRouter); 
+    app.use('/Image',imageRouter);
+    app.use('/UpdateUser',updateUserRoute);
+    app.use('/UpdateUserPassword',updateUserPassowordRoute)
 }
 
 module.exports = route;

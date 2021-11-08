@@ -2,6 +2,7 @@ const User = require('../models/User');
 
 class SignUpController {
 
+
     index(req,res, next) {
         const hoten = req.query.name;
         const mk = req.query.password;
@@ -43,27 +44,6 @@ class SignUpController {
                         res.json({error: false, message: 'Đăng Ký thành công'});
                     }
                 })
-                // const users = [user]
-                // User.insertMany(users).then(function() {
-                //     res.json({error: false, message: 'Insert Success'});
-                //     }).catch(function(err){
-                //     res.json({error: true, message: err.message});
-                // });
-                // user.save(function(err){
-                //     if(err) {
-                //         res.json({
-                //             error: true, 
-                //             message : err.message
-                //         })
-                //     }
-                //     else {
-                //         res.json({
-                //             error: false, 
-                //             message: '', 
-                //             user
-                //         });
-                //     }
-                // });
             }
         })
     }
