@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Song = require('../models/Song');
 const Category = require('../models/Category');
 const Singer = require('../models/Singer');
@@ -5,8 +6,21 @@ const Playlist = require('../models/Playlist');
 const {mutipleMongooseToObject} = require('../../util/mongoose');
 const {mongooseToObject} = require('../../util/mongoose');
 const {removeNewObjectID} = require('../../util/RemoveNewObjectID');
+const {getFileName} = require('../../util/getFileNameFromLink');
+
+// delete file
+const {deleteSong} = require('../../util/deleteFile');
+const {deleteSongImage} = require('../../util/deleteFile');
+const {deleteSingerImage} = require('../../util/deleteFile');
+const {deletePlaylistImage} = require('../../util/deleteFile');
 
 class ManageController {
+
+    test(req, res) {
+        Song.find({playlistid: '61893d886eda37a38a418610'},function(err,song){
+            res.json(song)
+        })
+    }
 
     //===================================================SONG==================================================
     // [GET] /manage/
@@ -96,9 +110,21 @@ class ManageController {
             });
         });
     }
+
+    // [DELETE] /Song/:idSong
+    deleteSong(req,res){
+        Song.findOneAndDelete({_id: req.params.idSong}, function(err, song){
+            if(err) return err.message;
+            else{
+                const fileSongMusic = getFileName(song.link);
+                const fileSongImage = getFileName(song.image);
+                deleteSong(fileSongMusic);
+                deleteSongImage(fileSongImage);
+                res.redirect('/manage/Song/');
+            }
+        });
+    }
     //===========================================================================================================
-
-
 
     //===================================================SINGER==================================================
     // [GET] /manage/Singer
@@ -131,7 +157,7 @@ class ManageController {
         });
     }
 
-    //[PUT] /manage/Singer/editSinger
+    //[PUT] /Manage/Singer/editSinger
     editSinger(req, res){
         Singer.updateOne({_id: req.body.idSinger}, req.body)
             .then(function(){
@@ -142,6 +168,21 @@ class ManageController {
                 req.session.messageUpdateSinger = 'Sửa ca sĩ Thất bại';
                 res.redirect('/manage/Singer/'+ req.body.idSinger);
             });    
+    }
+    // [DELETE]  /manage/Singer/:idSinger
+    deleteSinger(req,res){
+        Singer.findOneAndDelete({_id: req.params.idSinger}, function(err, singer){
+            if(err) return err.message;
+            else{
+                const fileSingerImage = getFileName(singer.image);
+                deleteSingerImage(fileSingerImage);
+
+                // delete singer in song
+                Song.updateMany({'singer._id': singer._id}, {$pull: {singer: {_id: singer._id}}},{multi:true},function(err,songs){
+                    res.redirect('/manage/Singer/');
+                }); 
+            }
+        });
     }
     //================================================================================================================
 
@@ -189,6 +230,23 @@ class ManageController {
                 res.redirect('/manage/Playlist/'+ req.body.idPlaylist);
             });    
     }
+    
+    // [DELETE]  /manage/Playlist/:idPlaylist
+    deletePlaylist(req,res){
+        Playlist.findOneAndDelete({_id: req.params.idPlaylist}, function(err, playlist){
+            if(err) return err.message;
+            else{
+                const filePlaylistImage = getFileName(playlist.image);
+                deletePlaylistImage(filePlaylistImage);
+
+                // delete singer in song
+                Song.updateMany({playlistid: playlist._id}, {$pull: {playlistid: playlist._id}},{multi:true},function(err,songs){
+                    res.redirect('/manage/Playlist/');
+                }); 
+            }
+        });
+    }
+    
     //================================================================================================================
 
     //=============================================     CATEGORY    ==================================================
@@ -234,6 +292,19 @@ class ManageController {
                 req.session.messageUpdateCategory = 'Sửa thể loại Thất bại';
                 res.redirect('/manage/Category/'+ req.body.idCategory);
             });    
+    }
+
+    // [DELETE]  /manage/Category/:idCategory
+    deleteCategory(req,res){
+        Category.findOneAndDelete({_id: req.params.idCategory}, function(err, category){
+            if(err) return err.message;
+            else{
+                // delete category in song
+                Song.updateMany({'category._id': category._id}, {$pull: {category: {_id: category._id}}},{multi:true},function(err,songs){
+                    res.redirect('/manage/Category/');
+                }); 
+            }
+        });
     }
     //================================================================================================================
 }

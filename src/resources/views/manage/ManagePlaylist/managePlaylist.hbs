@@ -18,10 +18,12 @@
                 <td>{{this.category.categoryname}}</td>
                 <td> 
                     <a href="/manage/Playlist/{{this._id}}">Sửa</a> |
-                    <a href="#">Xóa</a>
+                    <a href="#" data-toggle="modal" data-target="#ModalDelete" data-id="{{this._id}}" data-action="/Manage/Playlist/">Xóa</a>
                 </td>
             </tr>
            {{/each}}
         </tbody>
     </table>
 </div>
+
+{{> ModalDelete}}

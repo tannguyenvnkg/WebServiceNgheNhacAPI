@@ -11,6 +11,7 @@ class InsertCategoryController {
 
     // [GET] /insertCategory 
     insertCategory(req, res) {
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
         res.render('insertlayouts/InsertCategory');
     }
 
