@@ -13,6 +13,7 @@ class InsertPlaylistController {
 
     // [GET] /insertPlaylist 
     insertPlaylist(req, res) {
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
         Category.find({})
             .then(categories => res.render('insertlayouts/InsertPlaylist',{ 
                 categories: mutipleMongooseToObject(categories)

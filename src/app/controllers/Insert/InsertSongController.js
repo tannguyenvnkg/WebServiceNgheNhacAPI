@@ -15,6 +15,7 @@ class InsertSongController {
 
     // [GET] /insertSong 
     insertSong(req, res) {
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
         Category.find({}, function(err, categories) {
             Singer.find({}, function(err, singers) {
                 Playlist.find({}, function(err, playlists) {
