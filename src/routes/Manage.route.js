@@ -32,5 +32,4 @@ router.get('/Category/:idCategory',manageController.detailCategory);
 router.get('/Category',manageController.listCategory);
 //=============================================================================
 
-router.get('/test',manageController.test);
 module.exports = router;

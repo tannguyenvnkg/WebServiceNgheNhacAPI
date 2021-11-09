@@ -16,7 +16,8 @@
     "fs": "0.0.1-security",
     "mediaserver": "^0.1.1",
     "method-override": "^3.0.0",
-    "mongoose": "^6.0.11"
+    "mongoose": "^6.0.11",
+    "nodemailer": "^6.7.0"
   },
   "devDependencies": {
     "express-session": "^1.17.2",

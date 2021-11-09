@@ -9,6 +9,7 @@ const insertRouter = require('./Insert.route');
 const imageRouter = require('./Image.route');
 const manageRouter = require('./Manage.route');
 const updateUserRoute = require('./UpdateUser.route');
+const resetPasswordRoute = require('./ResetPassword.route');
 
 function route(app){
     
@@ -30,6 +31,7 @@ function route(app){
     app.use('/Insert',insertRouter); 
     app.use('/Image',imageRouter);
     app.use('/UpdateUser',updateUserRoute);
+    app.use('/ResetPassword',resetPasswordRoute);
 }
 
 module.exports = route;

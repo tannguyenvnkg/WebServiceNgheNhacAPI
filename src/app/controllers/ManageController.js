@@ -15,13 +15,6 @@ const {deleteSingerImage} = require('../../util/deleteFile');
 const {deletePlaylistImage} = require('../../util/deleteFile');
 
 class ManageController {
-
-    test(req, res) {
-        Song.find({playlistid: '61893d886eda37a38a418610'},function(err,song){
-            res.json(song)
-        })
-    }
-
     //===================================================SONG==================================================
     // [GET] /manage/
     listSong(req, res) {
