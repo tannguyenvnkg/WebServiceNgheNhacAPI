@@ -20,14 +20,7 @@ class SignUpController {
                 
             }
             else {             
-                // const user = new User({
-                //     username : '',
-                //     name : hoten,
-                //     password : mk,
-                //     sex : gioitinh,
-                //     email : email,
-                //     followPlaylist : []
-                // });
+
                 User.create({
                     username : '',
                     name : hoten,
