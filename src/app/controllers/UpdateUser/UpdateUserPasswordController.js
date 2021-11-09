@@ -2,7 +2,7 @@ const User = require('../models/User');
 
 class UpdateUserPasswordController{
 
-    //[PUT] /UpdateUserPassword?email="value"&name="value"
+    //[PUT] UpdateUser/UpdatePassword?email="value"&name="value"
     index(req,res, next) {
         const email = req.query.email;
         const oldPassword = req.query.oldPassword;
