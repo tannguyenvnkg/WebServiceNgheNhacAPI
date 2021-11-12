@@ -24,7 +24,7 @@ class LogInController {
                 }); 
                 return;
             }
-            if(user === undefined){
+            if(user === null){
                 res.json({error: true, message: 'Sai tài khoản khoản hoặc mật khẩu'});
             }
             else {
