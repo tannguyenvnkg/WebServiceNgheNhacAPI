@@ -30,7 +30,7 @@ class SearchController{
                                 error: false,  
                                 message: '',
                                 singer,
-                                listsong: songs
+                                listSong: songs
                             });
                         }
                     });
@@ -45,7 +45,7 @@ class SearchController{
                                 error: false,  
                                 message: '',
                                 singer,
-                                listsong: songs
+                                listSong: songs
                             });
                         }else{
                             res.json({
