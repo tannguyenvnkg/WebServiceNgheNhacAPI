@@ -3,9 +3,18 @@ const router = express.Router();
 
 const updateUserController = require('../app/controllers/UpdateUser/UpdateUserController');
 const updateUserPasswordController = require('../app/controllers/UpdateUser/UpdateUserPasswordController');
+const playlistUserController = require('../app/controllers/UpdateUser/PlaylistUserController');
+
+
+router.get('/LoadPlaylistUser',playlistUserController.loadPlaylistUser);
+router.delete('/RemovePlaylistUser',playlistUserController.removePlaylistUser);
+router.delete('/RemoveSongFromPlaylistUser',playlistUserController.removeSongFromPlaylistUser);
+router.post('/AddNewSongToPlaylistUser',playlistUserController.addNewSongToPlaylistUser);
+router.post('/CreatePlaylistUser',playlistUserController.createPlaylistUser);
+
+router.put('/UpdatePassword',updateUserPasswordController.index);
 
 router.put('/AddLovePlaylist',updateUserController.addLovePlaylist);
-router.put('/UpdatePassword',updateUserPasswordController.index);
 router.put('/',updateUserController.index);
 
 module.exports = router;
