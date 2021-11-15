@@ -2,7 +2,7 @@ const User = require('../models/User');
 
 class SignUpController {
 
-
+    // [POST] /SignUp?email='values'&password='values'&name='values'&sex='values'
     index(req,res, next) {
         const hoten = req.query.name;
         const mk = req.query.password;
