@@ -65,10 +65,13 @@ class UpdateUserController{
                             }else{
                                 User.findOneAndUpdate({ _id: userId }, {$push: {followPlaylist: playlist}}).exec(function(err, user){
                                     if(err) res.json({ error: true, message: err.message });
-                                    else if(user === undefined || user === null){
-                                        res.json({ error: true, message: 'Người dùng không tồn tại' });
-                                    }else {
-                                        res.json({ error: false, message: 'Đã thêm vào playlist ưa thích'});
+                                    // else if(user === undefined || user === null){
+                                    //     res.json({ error: true, message: 'Người dùng không tồn tại' });
+                                    // }
+                                    else {
+                                        User.findOne({ _id: userId }).exec(function(err, user){
+                                            res.json({ error: false, message: 'Đã thêm vào playlist ưa thích', user});
+                                        });
                                     }
                                 });
                             }
@@ -81,7 +84,9 @@ class UpdateUserController{
                         else if(user === undefined || user === null){
                             res.json({ error: true, message: 'Người dùng không tồn tại' });
                         }else {
-                            res.json({ error: false, message: 'Đã xóa khỏi playlist ưa thích'});
+                            User.findOne({ _id: userId }).exec(function(err, user){
+                                res.json({ error: false, message: 'Đã xóa khỏi playlist ưa thích', user});
+                            });
                         }
                     });
                 }
