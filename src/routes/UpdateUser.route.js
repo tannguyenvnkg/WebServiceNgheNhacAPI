@@ -14,7 +14,7 @@ router.post('/CreatePlaylistUser',playlistUserController.createPlaylistUser);
 
 router.put('/UpdatePassword',updateUserPasswordController.index);
 
-router.put('/AddLovePlaylist',updateUserController.addLovePlaylist);
+router.put('/AddLoveOrRemovePlaylist',updateUserController.addLovePlaylist);
 router.put('/',updateUserController.index);
 
 module.exports = router;
