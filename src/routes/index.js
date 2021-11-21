@@ -10,6 +10,7 @@ const imageRouter = require('./Image.route');
 const manageRouter = require('./Manage.route');
 const updateUserRoute = require('./UpdateUser.route');
 const resetPasswordRoute = require('./ResetPassword.route');
+const albumRoute = require('./Album.route');
 
 function route(app){
     
@@ -32,6 +33,7 @@ function route(app){
     app.use('/Image',imageRouter);
     app.use('/UpdateUser',updateUserRoute);
     app.use('/ResetPassword',resetPasswordRoute);
+    app.use('/Album',albumRoute);
 }
 
 module.exports = route;

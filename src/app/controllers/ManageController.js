@@ -3,6 +3,8 @@ const Song = require('../models/Song');
 const Category = require('../models/Category');
 const Singer = require('../models/Singer');
 const Playlist = require('../models/Playlist');
+const Album = require('../models/Album');
+
 const {mutipleMongooseToObject} = require('../../util/mongoose');
 const {mongooseToObject} = require('../../util/mongoose');
 const {removeNewObjectID} = require('../../util/RemoveNewObjectID');
@@ -13,6 +15,7 @@ const {deleteSong} = require('../../util/deleteFile');
 const {deleteSongImage} = require('../../util/deleteFile');
 const {deleteSingerImage} = require('../../util/deleteFile');
 const {deletePlaylistImage} = require('../../util/deleteFile');
+const {deleteAlbumImage} = require('../../util/deleteFile');
 
 class ManageController {
     //===================================================SONG==================================================
@@ -29,79 +32,95 @@ class ManageController {
         }
     }
     //[GET] /manage/Song/:idSong
-    detailSong(req, res){
+    async detailSong(req, res){
         var message = '';
         if(req.session.messageUpdateSong !== undefined)
             message = req.session.messageUpdateSong 
         if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
-        Song.findOne({_id: req.params.idSong}).exec(function(err, song) { // get id song to edit
-            if(song === undefined) res.redirect('/manage') // reload current website if song is undefined
-            else{
-                Category.find({}, function(err, categories) {
-                    Singer.find({}, function(err, singers) {
-                        Playlist.find({}, function(err, playlists) {
-                            const songCategories = song.category
-                            const singerInSong = song.singer
-                            res.render('manage/ManageSong/editSong',{
-                                isLogin: true,
-                                categories: mutipleMongooseToObject(categories),
-                                singers: mutipleMongooseToObject(singers), 
-                                playlists: mutipleMongooseToObject(playlists),
-                                song: mongooseToObject(song),
-                                message,
-                                helpers: {
-                                    checkSong: function(id){ // set checked for checkbox
-                                        const idCategorySong = removeNewObjectID(id.toString());
-                                        if(songCategories.filter(s => s._id == idCategorySong).length > 0){ // true if category's id  is in this song
-                                            return 'checked';
-                                        }
-                                        else return '';
-                                    },
-                                    checkSinger: function(id){ // set checked for checkbox
-                                        const idSinger = removeNewObjectID(id.toString());
-                                        if(singerInSong.filter(s => s._id == idSinger).length > 0){ // true if singer's id  is in this song
-                                            return 'checked';
-                                        }
-                                        else return '';
-                                    },
-                                    checkPlaylist: function(id){
-                                        return song.playlistid.indexOf(id) !== -1 ? 'checked' : '';
-                                    }
-                                }
-                            });
-                        });
-                    });
+
+        try {
+            const song = await Song.findOne({_id: req.params.idSong});
+            if(song){
+                const categories = await Category.find({});
+                const singers = await Singer.find({});
+                const playlists = await Playlist.find({});
+                const albums = await Album.find({});
+
+                const songCategories = song.category
+                const singerInSong = song.singer
+
+                res.render('manage/ManageSong/editSong',{
+                    isLogin: true,
+                    categories: mutipleMongooseToObject(categories),
+                    singers: mutipleMongooseToObject(singers), 
+                    playlists: mutipleMongooseToObject(playlists),
+                    albums: mutipleMongooseToObject(albums),
+                    song: mongooseToObject(song),
+                    message,
+                    helpers: {
+                        checkSong: function(id){ // set checked for checkbox
+                            const idCategorySong = removeNewObjectID(id.toString());
+                            if(songCategories.filter(s => s._id == idCategorySong).length > 0){ // true if category's id  is in this song
+                                return 'checked';
+                            }
+                            else return '';
+                        },
+                        checkSinger: function(id){ // set checked for checkbox
+                            const idSinger = removeNewObjectID(id.toString());
+                            if(singerInSong.filter(s => s._id == idSinger).length > 0){ // true if singer's id  is in this song
+                                return 'checked';
+                            }
+                            else return '';
+                        },
+                        checkAlbum: function(id){ // set checked for checkbox
+                            return song.albumid.indexOf(id) !== -1 ? 'checked' : '';
+                        },
+                        checkPlaylist: function(id){
+                            return song.playlistid.indexOf(id) !== -1 ? 'checked' : '';
+                        }
+                    }
                 });
+            }else{ // if there is no song
+                res.redirect('/manage')
             }
-        });
+        } catch (error) {
+            console.log(error.message);
+            res.redirect('/manage/');
+        }
     }
 
     //[PUT] /manage/Song/editSong
-    editSong(req, res){
-        Category.find({_id: {$in: req.body.categoryId}}, function(err, categories){
-            Singer.find({_id: {$in: req.body.singerId}}, function(err, singers){
-                Playlist.find({_id: {$in: req.body.playlistId}},'_id', function(err, playlists){
-                    if(!err)
-                    {
-                        req.body.category = categories;
-                        req.body.singer = singers;
-                        req.body.playlistid = req.body.playlistId;
+    async editSong(req, res){
+        try {
+            const categories = await Category.find({_id: {$in: req.body.categoryId}});
+            const singers = await Singer.find({_id: {$in: req.body.singerId}});
+            // const playlistIds = await Playlist.find({_id: {$in: req.body.playlistId}},'_id');
+            // const albumIds = await Album.find({_id: {$in: req.body.albumId}},'_id');
 
-                        Song.updateOne({_id: req.body.idSong}, req.body)
-                            .then(function(){
-                                req.session.messageUpdateSong = 'Sửa bài hát thành công';
-                                res.redirect('/manage/Song/'+ req.body.idSong);
-                            })
-                            .catch(function(err){
-                                req.session.messageUpdateSong = 'Sửa bài hát Thất bại';
-                                res.redirect('/manage/Song/'+ req.body.idSong);
-                            });       
-                    }else{
-                        res.json({error: true, message: 'Sửa thất bại', error_message: err.message});
-                    }
-                });
-            });
-        });
+            req.body.category = categories;
+            req.body.singer = singers;
+            req.body.playlistid = req.body.playlistId;
+            req.body.albumid = req.body.albumId;
+
+            console.log(req.body.category);
+            console.log(req.body.singer);
+            console.log(req.body.playlistid);
+            console.log(req.body.albumid);
+
+            Song.updateOne({_id: req.body.idSong}, req.body)
+                .then(function(){
+                    req.session.messageUpdateSong = 'Sửa bài hát thành công';
+                    res.redirect('/manage/Song/'+ req.body.idSong);
+                })
+                .catch(function(err){
+                    console.log(err.message);
+                    req.session.messageUpdateSong = 'Sửa bài hát Thất bại';
+                    res.redirect('/manage/Song/'+ req.body.idSong);
+                });       
+        } catch (error) {
+            console.log(error.message);
+            res.redirect('/manage/Song/' + req.body.idSong);
+        }
     }
 
     // [DELETE] /Song/:idSong
@@ -116,6 +135,112 @@ class ManageController {
                 res.redirect('/manage/Song/');
             }
         });
+    }
+    //===========================================================================================================
+
+    //===================================================ALBUM===================================================
+    // [GET] /manage/Album
+    listAlbum(req, res) {
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        else { 
+            Album.find({}).exec(function(err, albums) {
+                res.render('manage/ManageAlbum/manageAlbum', {
+                    isLogin: true,
+                    albums: mutipleMongooseToObject(albums),
+                }); 
+            });
+        }
+    }
+
+    //[GET] /manage/Album/:idAlbum
+    async detailAlbum(req, res){
+        var message = '';
+        if(req.session.messageUpdateAlbum !== undefined)
+            message = req.session.messageUpdateAlbum 
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        try {
+            const album = await Album.findById(req.params.idAlbum);
+            const singers = await Singer.find({});
+            if(album) {
+                const idSingerInAlbum = removeNewObjectID(album.singer._id.toString());
+                res.render('manage/ManageAlbum/editAlbum',{
+                    isLogin: true,
+                    singers: mutipleMongooseToObject(singers), 
+                    album: mongooseToObject(album),
+                    message,
+                    helpers: {
+                        checkSinger: function(id){ // set checked for checkbox
+                            const idSinger = removeNewObjectID(id.toString());
+                            if(idSingerInAlbum == idSinger){ // true if singer's id  is in this song
+                                return 'checked';
+                            }
+                            else return '';
+                        },
+                    }
+                });
+            }
+            else {
+                res.redirect('/manage/Album/');
+            }
+        } catch (error) {
+            res.render('error/404/404');
+            console.log(error);
+            // res.send(error);
+        }
+    }
+
+    //[PUT] /Manage/Album/editAlbum
+    async editAlbum(req, res){
+        try {
+            const singer = await Singer.findById(req.body.singerId);
+            if(singer){
+                req.body.singer = singer;
+                Album.updateOne({_id: req.body.idAlbum}, req.body)
+                    .then(function(){
+                        req.session.messageUpdateAlbum = 'Sửa ca sĩ thành công';
+                        res.redirect('/manage/Album/'+ req.body.idAlbum);
+                    })
+                    .catch(function(err){
+                        req.session.messageUpdateAlbum = 'Sửa ca sĩ Thất bại';
+                        res.redirect('/manage/Album/'+ req.body.idAlbum);
+                    });    
+            }else{
+                req.session.messageUpdateAlbum = 'Sửa ca sĩ Thất bại';
+                res.redirect('/manage/Album/'+ req.body.idAlbum);
+            }
+        } catch (error) {
+            res.render('error/404/404');
+            console.log(error);
+        }
+    }
+
+    // [DELETE]  /manage/Album/:idAlbum
+    deleteAlbum(req,res){
+        try {
+            Album.findOneAndDelete({_id: req.params.idAlbum}, function(err, album){
+                if(err) {
+                    res.render('error/404/404');
+                    console.log(err.message);
+                }
+                if(album){
+                    console.log(album);
+                    const fileAlbumImage = getFileName(album.imageAlbum);
+                    deleteAlbumImage(fileAlbumImage);
+    
+                    // delete album in song
+                    Song.updateMany({albumid: album._id}, {$pull: {albumid: album._id}},{multi:true},function(err,songs){
+                        res.redirect('/manage/Album/');
+                    }); 
+                }
+                else{
+                    res.render('error/404/404');
+                }
+            });
+        } catch (error) {
+            res.render('error/404/404');
+            console.log(error);
+        }
+        
     }
     //===========================================================================================================
 

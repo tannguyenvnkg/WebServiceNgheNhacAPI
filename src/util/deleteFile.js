@@ -2,6 +2,7 @@ const {pathSongMusic} = require('./path');
 const {pathSongImage} = require('./path');
 const {pathSingerImage} = require('./path');
 const {pathPlaylistImage} = require('./path');
+const {pathAlbumImage} = require('./path');
 var fs = require('fs');
 
 function deleteSong(fileName){
@@ -19,6 +20,10 @@ function deleteSingerImage(fileName){
 }
 function deletePlaylistImage(fileName){
     const path = pathPlaylistImage + fileName;
+    deleteFile(path);
+}
+function deleteAlbumImage(fileName){
+    const path = pathAlbumImage + fileName;
     deleteFile(path);
 }
 
@@ -39,5 +44,6 @@ module.exports = {
     deleteSong,
     deleteSongImage,
     deleteSingerImage,
-    deletePlaylistImage
+    deletePlaylistImage,
+    deleteAlbumImage
 }

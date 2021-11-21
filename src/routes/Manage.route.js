@@ -30,6 +30,12 @@ router.put('/Category/editCategory',manageController.editCategory);
 router.delete('/Category/:idCategory',manageController.deleteCategory);
 router.get('/Category/:idCategory',manageController.detailCategory);
 router.get('/Category',manageController.listCategory);
+
+//===========================   ALBUM  ========================================
+router.put('/Album/editAlbum',manageController.editAlbum);
+router.delete('/Album/:idAlbum',manageController.deleteAlbum);
+router.get('/Album/:idAlbum',manageController.detailAlbum);
+router.get('/Album',manageController.listAlbum);
 //=============================================================================
 
 module.exports = router;

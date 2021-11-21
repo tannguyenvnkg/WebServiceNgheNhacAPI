@@ -40,7 +40,15 @@
             </div>
         {{/each}}
 
-        <button type="submit" class="btn btn-primary">Thêm bài hát</button>
+        <h3>Album</h3>
+        {{#each albums}}
+            <div class="form-check col-lg-6">
+                <input class="form-check-input" type="checkbox" name="albumId[]" id="{{this._id}}" value="{{this._id}}"  {{checkAlbum this._id}}>
+                <label class="form-check-label" for="{{this._id}}"> {{this.albumname}} </label>
+            </div>
+        {{/each}}
+
+        <button type="submit" class="btn btn-primary">sửa bài hát</button>
         <a href="/manage/Song" class="btn btn-primary">Trở lại</a>
     </form>
 </div>
