@@ -96,6 +96,7 @@ class ManageController {
             const singers = await Singer.find({_id: {$in: req.body.singerId}});
             // const playlistIds = await Playlist.find({_id: {$in: req.body.playlistId}},'_id');
             // const albumIds = await Album.find({_id: {$in: req.body.albumId}},'_id');
+            console.log(req.body.singerId)
 
             req.body.category = categories;
             req.body.singer = singers;

@@ -12,6 +12,9 @@ const updateUserRoute = require('./UpdateUser.route');
 const resetPasswordRoute = require('./ResetPassword.route');
 const albumRoute = require('./Album.route');
 
+
+const testRoute = require('./test.route');
+
 function route(app){
     
     app.get('/', (req, res) => {
@@ -34,6 +37,8 @@ function route(app){
     app.use('/UpdateUser',updateUserRoute);
     app.use('/ResetPassword',resetPasswordRoute);
     app.use('/Album',albumRoute);
+
+    app.use('/testArray', testRoute);
 }
 
 module.exports = route;
