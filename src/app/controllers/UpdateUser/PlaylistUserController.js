@@ -21,7 +21,8 @@ class PlaylistUserController{
                         }else{
                             res.json({
                                 error: false,
-                                playlistUser
+                                message: '',
+                                listPlayListUser : playlistUser
                             });
                         }
                     });
@@ -47,7 +48,7 @@ class PlaylistUserController{
                     const playlistUser = new PlaylistUser(req.query);
                     playlistUser.save()
                                 .then(function(){
-                                    res.json( {error: false, message: 'Tạo playlist thành công'});
+                                    res.json( {error: false, message: 'Tạo playlist thành công',playlistUser});
                                 })
                                 .catch(function(err){
                                     res.json( {error: true, message: err.message});
@@ -111,6 +112,7 @@ class PlaylistUserController{
             });
         }
     }
+    
     //[DELETE] /updateuser/RemoveSongFromPlaylistUser?idPlaylist='values'&idSong='values'
     removeSongFromPlaylistUser(req,res){
         if(!req.query.idPlaylist){
@@ -136,6 +138,44 @@ class PlaylistUserController{
                         });
                     }
                 });
+            });
+        }
+    }
+
+    //[GET] /updateuser/ShowSongFromPlaylistUser?idPlaylist='values'
+    showSongFromPlaylistUser(req, res) {
+        if(!req.query.idPlaylist){
+            res.json({error: true, message: 'Lỗi Id Playlist bị trống'});
+        }
+        else {
+            PlaylistUser.findOne({_id: req.query.idPlaylist}).exec(function(err, playlistUser) {
+                if(err) res.json({ error: true, message: err.message });
+                else {
+                    if(!playlistUser) {
+                        res.json({error: true, message: 'Lỗi Id Playlist chưa được tạo'});
+                    }
+                    else{
+                        res.json({error: false, message: '', playlistUser});
+                    }
+                }
+            })
+        }
+    }
+
+    //[PUT] /updateuser/UpdateNameFromPlaylistUser?idPlaylist='values'&namePlaylist='value'
+    updateNameFromPlaylistUser(req,res) {
+        if(!req.query.idPlaylist){ 
+            res.json({error: true, message: 'Lỗi Id Playlist bị trống'});
+        }
+        else if (!req.query.namePlaylist) {
+            res.json({error: true, message: 'Lỗi name Playlist bị trống'});
+        }
+        else {
+            PlaylistUser.findOneAndUpdate({_id: req.query.idPlaylist}, {$set: {playlistName: req.query.namePlaylist}},function(err, playlistUser){
+                if(err) res.json({ error: true, message: err.message });
+                else {
+                    res.json({error: false, message: 'Sửa tên playlist thành Công'});
+                }
             });
         }
     }

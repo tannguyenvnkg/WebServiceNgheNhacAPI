@@ -11,6 +11,8 @@ router.delete('/RemovePlaylistUser',playlistUserController.removePlaylistUser);
 router.delete('/RemoveSongFromPlaylistUser',playlistUserController.removeSongFromPlaylistUser);
 router.post('/AddNewSongToPlaylistUser',playlistUserController.addNewSongToPlaylistUser);
 router.post('/CreatePlaylistUser',playlistUserController.createPlaylistUser);
+router.get('/ShowSongFromPlaylistUser',playlistUserController.showSongFromPlaylistUser);
+router.put('/UpdateNameFromPlaylistUser',playlistUserController.updateNameFromPlaylistUser)
 
 router.put('/UpdatePassword',updateUserPasswordController.index);
 
