@@ -10,6 +10,7 @@ const User = new Schema({
     sex: Boolean,
     email: String,
     resetCode: String,
+    favoriteSinger: [String],
     followPlaylist: [Playlist]
  }, 
     {
