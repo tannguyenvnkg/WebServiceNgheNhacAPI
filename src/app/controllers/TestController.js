@@ -9,16 +9,18 @@ class TestController {
 
     async TestArrayWithSingerID(req, res){
         try {
-            console.log(req.body.listid);
             console.log(req.body);
             const singer = await Singer.find({_id: {$in: req.body.listid}});
-            res.json({
-                error:false,
-                singer
-            });
-            // res.json({error:false,message:'TestArrayWithSingerID: notthing happen hihihihi'});
+            
+            console.log(singer);
+            if(singer.length !== 0){
+                res.json({ error:false, singer });
+            }
+            else{
+                res.json({ error:true, message: 'không tìm thấy singer' });
+            }
         } catch (error) {
-            res.json({ error:true, message: error.message });
+            res.json({ error:true, message: error.message, note: 'ID ca sĩ có thể không hợp lệ' });
         }
     }
 }

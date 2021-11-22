@@ -16,6 +16,7 @@ router.put('/UpdateNameFromPlaylistUser',playlistUserController.updateNameFromPl
 
 router.put('/UpdatePassword',updateUserPasswordController.index);
 
+router.put('/AddFavoriteSinger',updateUserController.addFavoriteSinger); // this method is called on phone
 router.put('/AddLoveOrRemovePlaylist',updateUserController.addLovePlaylist);
 router.put('/',updateUserController.index);
 

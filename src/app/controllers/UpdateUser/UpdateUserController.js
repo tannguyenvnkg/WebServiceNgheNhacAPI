@@ -1,6 +1,8 @@
 const User = require('../../models/User');
 const Playlist = require('../../models/Playlist');
+const Singer = require('../../models/Singer');
 const {removeNewObjectID} = require('../../../util/RemoveNewObjectID');
+const {removeArrayNewObjectID} = require('../../../util/RemoveNewObjectID');
 class UpdateUserController{
 
     //[PUT] /updateuser?email="value"&name="value"&sex="value"
@@ -92,6 +94,43 @@ class UpdateUserController{
                 }
             }
         });
+    }
+
+    //[PUT] /updateuser/addFavoriteSinger
+    async addFavoriteSinger(req, res){
+        try {
+            if(!req.body.singerid){ // singerid is not empty
+                res.json({ error:true, message: 'ID ca sĩ không được để trống' });
+            }
+            else if(!req.body.userid){ // userid is not empty
+                res.json({ error:true, message: 'ID người dùng không được để trống' });
+            }
+            else{
+                const user = await User.findById(req.body.userid);
+                if(user){ // user is valid
+                    const singerId = await Singer.find({_id: {$in: req.body.singerid}}, '_id'); // get id singer
+                    if(singerId.length !== 0){ // singerid is not empty
+                        const newSingerId = removeArrayNewObjectID(singerId); // get only singerids which are in mongodb
+                        console.log(newSingerId);
+                        User.updateOne({ _id: user._id }, {$addToSet: {favoriteSinger: newSingerId}}, async function(err, user){
+                            if(err) res.json({ error: true, message: err.message });
+                            else{
+                                const user = await User.findById(req.body.userid);
+                                res.json({ error:false, message: 'cập nhật thông tin user thành công', user });
+                            }
+                        });
+                    }
+                    else{
+                        res.json({ error:true, message: 'Không tìm thấy Ca sĩ' });
+                    }
+                }
+                else{ 
+                    res.json({ error:true, message: 'User không tồn tại' });
+                }
+            }
+        } catch (error) {
+            res.json({ error:true, message: error.message, note: 'ID ca sĩ hoặc ID User có thể không hợp lệ' });
+        }
     }
 }
 
