@@ -11,10 +11,11 @@ const {uploadImageSinger} = require('./Upload.multer');
 const {uploadImagePlaylist} = require('./Upload.multer');
 const {uploadImageSong} = require('./Upload.multer');
 const {uploadImageAlbum} = require('./Upload.multer');
+const {uploadImageCategory} = require('./Upload.multer');
 
 //insert category 
 router.get('/insertCategory',InsertCategoryController.insertCategory);
-router.post('/insertCategoryPost',InsertCategoryController.insertCategoryPost);
+router.post('/insertCategoryPost', uploadImageCategory.single('image'), InsertCategoryController.insertCategoryPost);
 
 //insert playlist 
 router.get('/insertPlaylist',InsertPlaylistController.insertPlaylist);

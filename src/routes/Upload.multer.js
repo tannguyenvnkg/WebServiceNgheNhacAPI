@@ -60,9 +60,23 @@ var storageImageAlbum = multer.diskStorage({
  
 var uploadImageAlbum = multer({ storage: storageImageAlbum })
 //=====================================================================
+//upload image Category
+var storageImageCategory = multer.diskStorage({
+  destination: function (req, file, cb) {
+  const pathCategoryImage = path.join(__dirname, '../','public','image','category','/');
+    cb(null, pathCategoryImage)
+  },
+  filename: function (req, file, cb) {
+    cb(null,  Date.now() + file.originalname )
+  }
+})
+ 
+var uploadImageCategory = multer({ storage: storageImageCategory })
+//=====================================================================
 module.exports = {
     uploadImageSinger,
     uploadImagePlaylist,
     uploadImageSong,
-    uploadImageAlbum
+    uploadImageAlbum,
+    uploadImageCategory
 }

@@ -17,6 +17,8 @@ class InsertCategoryController {
 
     // [POST] /insertCategoryPost 
     insertCategoryPost(req, res){
+        // console.log(req.file)
+        req.body.imageCategory =  req.protocol + '://' + req.headers.host + '/image/imagecategory/' + req.file.filename;
         const category = new Category(req.body);
         category.save()
                 .then(function(){
