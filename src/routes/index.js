@@ -11,6 +11,7 @@ const manageRouter = require('./Manage.route');
 const updateUserRoute = require('./UpdateUser.route');
 const resetPasswordRoute = require('./ResetPassword.route');
 const albumRoute = require('./Album.route');
+const categoryRoute = require('./ListCategories.route')
 
 
 const testRoute = require('./test.route');
@@ -30,13 +31,14 @@ function route(app){
     app.use('/ListSong',listSongRouter);
     app.use('/LogIn',logInRouter);
     app.use('/SignUp',signUpRouter);
-    app.use('/getPlayList',loadPlayList);
+    app.use('/PlayList',loadPlayList);
     app.use('/StreamSong',streamSongRouter);
     app.use('/Insert',insertRouter); 
     app.use('/Image',imageRouter);
     app.use('/UpdateUser',updateUserRoute);
     app.use('/ResetPassword',resetPasswordRoute);
     app.use('/Album',albumRoute);
+    app.use('/Category',categoryRoute)
 
     app.use('/testArray', testRoute);
 }
