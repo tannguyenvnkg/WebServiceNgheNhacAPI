@@ -18,6 +18,7 @@ router.put('/UpdatePassword',updateUserPasswordController.index);
 
 router.put('/AddFavoriteSinger',updateUserController.addFavoriteSinger); // this method is called on phone
 router.put('/AddLoveOrRemovePlaylist',updateUserController.addLovePlaylist);
+router.put('/AddLoveOrRemoveAlbum',updateUserController.addLoveAlbum);
 router.put('/',updateUserController.index);
 
 module.exports = router;

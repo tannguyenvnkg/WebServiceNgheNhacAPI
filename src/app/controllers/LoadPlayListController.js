@@ -25,12 +25,14 @@ class LoadPlayListController {
     // [GET] /PlayList/getPlaylistByCategoryId?CategoryId='value'
     async getPlayListByIDCategory (req,res) {
         try{
-            const playlist = await Playlist.find({});
-            if (playlist) {
-                res.json({ error: false, message: '', playlist});
-            }
-            else {
-                res.json({ error: true, message: 'Lỗi không thể lấy được danh sách Playlist'});
+            if(req.query.CategoryId){
+                const playlist = await Playlist.find({'_id' : req.query.CategoryId });
+                if (playlist) {
+                    res.json({ error: false, message: '', playlist});
+                }
+                else {
+                    res.json({ error: true, message: 'Lỗi không thể lấy được danh sách Playlist'});
+                }
             }
         }
         catch (error) {
