@@ -26,7 +26,7 @@ class LoadPlayListController {
     async getPlayListByIDCategory (req,res) {
         try{
             if(req.query.CategoryId){
-                const listPlayList = await Playlist.find({'_id' : req.query.CategoryId });
+                const listPlayList = await Playlist.find({"category._id" : req.query.CategoryId });
                 if (listPlayList) {
                     res.json({ error: false, message: '', listPlayList});
                 }
