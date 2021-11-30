@@ -26,9 +26,9 @@ class LoadPlayListController {
     async getPlayListByIDCategory (req,res) {
         try{
             if(req.query.CategoryId){
-                const playlist = await Playlist.find({'_id' : req.query.CategoryId });
-                if (playlist) {
-                    res.json({ error: false, message: '', playlist});
+                const listPlayList = await Playlist.find({'_id' : req.query.CategoryId });
+                if (listPlayList) {
+                    res.json({ error: false, message: '', listPlayList});
                 }
                 else {
                     res.json({ error: true, message: 'Lỗi không thể lấy được danh sách Playlist'});
