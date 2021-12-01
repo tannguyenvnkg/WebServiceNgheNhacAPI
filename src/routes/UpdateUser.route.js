@@ -16,7 +16,10 @@ router.put('/UpdateNameFromPlaylistUser',playlistUserController.updateNameFromPl
 
 router.put('/UpdatePassword',updateUserPasswordController.index);
 
+
+router.put('/RemoveFavoriteSinger',updateUserController.removeFavoriteSinger); // this method is called on phone
 router.put('/AddFavoriteSinger',updateUserController.addFavoriteSinger); // this method is called on phone
+router.put('/AddManyFavoriteSinger',updateUserController.addManyFavoriteSinger); // this method is called on phone
 router.put('/AddLoveOrRemovePlaylist',updateUserController.addLovePlaylist);
 router.put('/AddLoveOrRemoveAlbum',updateUserController.addLoveAlbum);
 router.put('/',updateUserController.index);

@@ -152,8 +152,76 @@ class UpdateUserController{
         });
     }
 
-    //[PUT] /updateuser/addFavoriteSinger
+    //[PUT] /updateuser/removeFavoriteSinger?singerid='values'&userid='values'
+    async removeFavoriteSinger(req, res){
+        try {
+            if(!req.query.singerid){ // singerid is not empty
+                res.json({ error:true, message: 'ID ca sĩ không được để trống' });
+            }
+            else if(!req.query.userid){ // userid is not empty
+                res.json({ error:true, message: 'ID người dùng không được để trống' });
+            }
+
+            const user = await User.findById(req.query.userid);
+            if(user){ // user is valid
+                const singerId = await Singer.findOne({_id: req.query.singerid}, '_id'); // get id singer
+                if(singerId){
+                    const newSingerId = removeNewObjectID(singerId.toString()); // get only singerids which are in mongodb
+                    User.updateOne({ _id: user._id }, {$pull: {favoriteSinger: newSingerId}}, async function(err, user){
+                        if(err) res.json({ error: true, message: err.message });
+                        else{
+                            const user = await User.findById(req.query.userid); // return new update user to json
+                            res.json({ error:false, message: 'Đã xóa ca sĩ khỏi danh sách ca sĩ ưa thích', user });
+                        }
+                    });
+                }else{
+                    res.json({ error:true, message: 'Không tìm thấy Ca sĩ' });
+                }
+            }else{
+                res.json({ error:true, message: 'User không tồn tại' });
+            }
+        } catch (error) {
+            console.log(error);
+            res.json({ error:true, message: error.message, note: 'ID ca sĩ hoặc ID User có thể không hợp lệ' });
+        }
+    }
+
+    //[PUT] /updateuser/AddFavoriteSinger?singerid='values'&userid='values'
     async addFavoriteSinger(req, res){
+        try {
+            if(!req.query.singerid){ // singerid is not empty
+                res.json({ error:true, message: 'ID ca sĩ không được để trống' });
+            }
+            else if(!req.query.userid){ // userid is not empty
+                res.json({ error:true, message: 'ID người dùng không được để trống' });
+            }
+
+            const user = await User.findById(req.query.userid);
+            if(user){ // user is valid
+                const singerId = await Singer.findOne({_id: req.query.singerid}, '_id'); // get id singer
+                if(singerId){
+                    const newSingerId = removeNewObjectID(singerId.toString()); // get only singerids which are in mongodb
+                    User.updateOne({ _id: user._id }, {$addToSet: {favoriteSinger: newSingerId}}, async function(err, user){
+                        if(err) res.json({ error: true, message: err.message });
+                        else{
+                            const user = await User.findById(req.query.userid); // return new update user to json
+                            res.json({ error:false, message: 'Đã thêm ca sĩ vào danh sách ca sĩ ưa thích', user });
+                        }
+                    });
+                }else{
+                    res.json({ error:true, message: 'Không tìm thấy Ca sĩ' });
+                }
+            }else{
+                res.json({ error:true, message: 'User không tồn tại' });
+            }
+        } catch (error) {
+            console.log(error);
+            res.json({ error:true, message: error.message, note: 'ID ca sĩ hoặc ID User có thể không hợp lệ' });
+        }
+    }
+
+    //[PUT] /updateuser/AddManyFavoriteSinger
+    async addManyFavoriteSinger(req, res){
         try {
             if(!req.body.singerid){ // singerid is not empty
                 res.json({ error:true, message: 'ID ca sĩ không được để trống' });
@@ -167,7 +235,6 @@ class UpdateUserController{
                     const singerId = await Singer.find({_id: {$in: req.body.singerid}}, '_id'); // get id singer
                     if(singerId.length !== 0){ // singerid is not empty
                         const newSingerId = removeArrayNewObjectID(singerId); // get only singerids which are in mongodb
-                        console.log(newSingerId);
                         User.updateOne({ _id: user._id }, {$addToSet: {favoriteSinger: newSingerId}}, async function(err, user){
                             if(err) res.json({ error: true, message: err.message });
                             else{

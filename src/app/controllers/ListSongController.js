@@ -1,5 +1,5 @@
 const Song = require('../models/Song');
-
+const Singer = require('../models/Singer');
 class ListSongController {
 
     // [GET] /listsong
@@ -19,6 +19,27 @@ class ListSongController {
             });
           });
     }
+
+    // [GET] /listsong/singer?singerid='values'
+    async getListSongBySingerID(req, res) {
+        try {
+            if(!req.query.singerid){
+                res.json({error: true, message: 'Không có ID Singer'});
+            }
+    
+            const singer = await Singer.findById(req.query.singerid);
+            if(singer){
+                const songs = await Song.find({'singer._id': singer._id});
+                res.json({ error: false, message: '', songs })
+            }else{
+                res.json({ error:true, message: 'Không tìm thấy ca sĩ' });
+            }
+        } catch (error) {
+            console.log(error);
+            res.json({ error:true, message: error.message, note: 'ID ca sĩ có thể không hợp lệ' });
+        }
+    }
+
 }
 
 module.exports = new ListSongController;
