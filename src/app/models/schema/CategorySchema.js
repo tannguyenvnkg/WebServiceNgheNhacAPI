@@ -9,5 +9,4 @@ const Category = new Schema({
         versionKey: false
     }
  );
-
 module.exports = Category;
