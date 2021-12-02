@@ -4,14 +4,12 @@ class InsertSingerController {
 
     // [GET] /insertSinger 
     insertSinger(req, res) {
-        console.log('req.hostname: ' + req.hostname);
-        console.log('req.port: ' + req.headers.host);
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
         res.render('insertlayouts/InsertSinger');
     }
 
     // [POST] /insertSingerPost 
     insertSingerPost(req, res){
-    
         console.log('req.file.path: ' + req.file.path);
         console.log('req.file.pathname: ' + req.file.filename);
         console.log('req.body.singername: ' + req.body.singername);

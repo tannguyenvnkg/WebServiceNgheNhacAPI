@@ -8,7 +8,7 @@ class LogInController {
         const mk = req.query.password;
         console.log(taikhoan);
         console.log(mk);
-        User.find({
+        User.findOne({
             $or:[
                 {username: taikhoan},
                 {email: taikhoan}
@@ -16,22 +16,22 @@ class LogInController {
             $and:[
                 {password: mk}
             ]
-        },function(err, listUser) {
-            console.log(listUser)
+        },function(err, user) {
+            console.log(user)
             if(err) {
                 res.json( {error: true, 
                 message : "Lỗi hệ thống vui lòng đăng nhập lại sau"
                 }); 
                 return;
             }
-            if(listUser[0] === undefined){
+            if(user === null){
                 res.json({error: true, message: 'Sai tài khoản khoản hoặc mật khẩu'});
             }
             else {
                 res.json({
                     error: false, 
                     message: 'Đăng nhập thành công', 
-                    listUser
+                    user
                 });
             }
         });

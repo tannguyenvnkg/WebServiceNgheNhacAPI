@@ -12,6 +12,8 @@ class AdminController {
         Admin.findOne({username: req.body.username, password: req.body.password}).exec(function (err, admin){
             if(admin != null){
                 req.session.username = admin.username;
+                req.session.password = admin.password;
+                req.session.name = admin.name;
                 res.redirect('/')
             }else {
                 res.render('login', {message: 'tài khoản hoặc mật khẩu không đúng'});

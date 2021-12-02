@@ -1,0 +1,13 @@
+<h1>Sửa playlist</h1>
+{{message}}
+<div class="mt-4 col-lg-6">
+    <form method="post" action="editPlaylist?_method=PUT" > 
+        <input type="hidden" name="idPlaylist" value="{{playlist._id}}">
+        <div class="form-group">
+            <label for="playlistname">Tên playlist</label>
+            <input type="text" name="playlistname" class="form-control col-lg-6" id="playlistname" placeholder="Tên playlist" value="{{playlist.playlistname}}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Sửa playlist</button>
+        <a href="/manage/Playlist" class="btn btn-primary">Trở lại</a>
+    </form>
+</div>

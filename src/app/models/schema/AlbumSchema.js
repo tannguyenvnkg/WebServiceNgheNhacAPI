@@ -6,12 +6,13 @@ const ListSong = require('./SongSchema');
 
 const Album = new Schema({
     albumname: String,
-    singer: [Singer],
-    listsong: [ListSong]
+    singer: Singer,
+    imageAlbum: String,
 }, 
     {
         versionKey: false,
-        timestamps: true
+        timestamps: true,
+        dropDups: true
     }
 );
 

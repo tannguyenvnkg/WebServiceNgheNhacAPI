@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const handlebars = require('express-handlebars');
 const sessions = require('express-session');
+const methodOverride = require('method-override');
 
 const db = require('./config/db/index');
 // connect database
@@ -29,9 +30,18 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(express.json());
+app.use(methodOverride('_method'));
 
 //template engine
-app.engine('hbs', handlebars({extname: '.hbs'}));
+app.engine('hbs', handlebars({
+    extname: '.hbs',
+    helpers: {
+        sumIndex: (a,b) => a + b,
+        isInArray: (item,array) =>{
+            return 'checked';
+        }
+    }
+}));
 app.set('view engine', 'hbs');
 app.set('views', path.join(path.join(__dirname, 'resources','views')));
 
