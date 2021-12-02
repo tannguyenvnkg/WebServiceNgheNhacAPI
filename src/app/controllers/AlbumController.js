@@ -22,7 +22,7 @@ class AlbumController {
         
     }
 
-    // [GET] /album/getSingerAlbum
+    // [GET] /album/getSingerAlbum?idSinger="value"
     async getSingerAlbum(req, res){
         try {
             if(req.query.idSinger){
