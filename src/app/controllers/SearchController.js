@@ -3,61 +3,43 @@ const Singer = require('../models/Singer');
 class SearchController{
 
     // [GET] /Search?q='values'
-    index(req, res, next) {
-        if(Object.keys(req.query).length === 0) {
-            res.json({ 
-                error: true,
-                message: 'Không có tham số truyền vảo'
-            });
-        }
-        const title = req.query.q; // get q
-        if(title == '' || title === undefined) { // empty query
-            res.json({error: true,  message: 'Không có giá trị được truyền vào'});
-        }
-        else { 
-            Singer.find({singername: new RegExp(title, 'i')}).exec(function(err, singer) {
-                if(err){
-                    res.json({error: true,  message: err.message});
-                    return;
-                }    
-                else if((singer.length !== 0) && (singer[0].singername !== undefined)){ // if q is singers and array singers is not empty => find singer and return singer's listsong
-                    Song.find({'singer.singername': new RegExp(title, 'i')}).exec(function(err,songs){
-                        if(err){
-                            res.json(err.message);
-                            return;
-                        }else {
-                            res.json({
-                                error: false,  
-                                message: '',
-                                singer,
-                                listSong: songs
-                            });
-                        }
+    async index(req, res){
+        try {
+            if(!req.query.q){
+                res.json({ error: true,  message: 'Không có ký tự để tìm kiếm !!!', note: ''});
+            }else{
+                const singerIds = await Singer.find({$text: {$search: req.query.q}}, '_id');
+                if(singerIds.length != 0){ // found singer
+                    const singers = await Singer.find({$text: {$search: req.query.q}}); // list singer
+                    const listsong1 = await Song.find({$text: {$search: req.query.q}}); // this listsong is found from req.query.q
+                    const listsong2 = await Song.find({'singer._id': {$in: singerIds}}); // this listsong is found from singerID
+                    const listSong = listsong2.concat(listsong1);
+
+                    res.json({
+                        error: false,  
+                        message: '',
+                        singer: singers,
+                        listSong
                     });
+                }else{ // if q is not singer
+                    const listSong = await Song.find({$text: {$search: req.query.q}});
+                    if(listSong.length != 0){
+                        res.json({
+                            error: false,  
+                            message: '',
+                            listSong
+                        });
+                    }else{
+                        res.json({error: true,  message: 'Không tìm thấy bài hát', note: ''});
+                    }
                 }
-                else { // if q is not singer => find song
-                    Song.find({title: new RegExp(title, 'i')}).exec(function(err,songs){
-                        if(err){
-                            res.json(err.message);
-                            return;
-                        }else if((songs.length !== 0) && (songs[0].title !== undefined)){
-                            res.json({
-                                error: false,  
-                                message: '',
-                                singer,
-                                listSong: songs
-                            });
-                        }else{
-                            res.json({
-                                error: true,
-                                message: 'Không tìm thấy bài hát'
-                            });
-                        }    
-                    });
-                }          
-            });
+            }
+        } catch (error) {
+            console.log(error);
+            res.json({ error: true,  message: error.message, note: ''});
         }
     }
+
 }
 
 module.exports = new SearchController;
