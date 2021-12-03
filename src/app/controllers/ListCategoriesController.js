@@ -6,7 +6,7 @@ class ListCategoriesController {
     // [GET] /category/getAllCategories
     async getAllCategories (req,res) {
         try{
-            const category = await Category.find({});
+            const category = await Category.find({}).limit(12);
             if (category) {
                 res.json({ error: false, message: '', category });
             }
