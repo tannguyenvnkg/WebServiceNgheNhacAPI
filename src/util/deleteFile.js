@@ -1,4 +1,4 @@
-const {pathSongMusic} = require('./path');
+const {pathSongMusic, pathUserImage} = require('./path');
 const {pathSongImage} = require('./path');
 const {pathSingerImage} = require('./path');
 const {pathPlaylistImage} = require('./path');
@@ -26,6 +26,10 @@ function deleteAlbumImage(fileName){
     const path = pathAlbumImage + fileName;
     deleteFile(path);
 }
+function deleteAvatarUser(fileName) {
+    const path = pathUserImage + fileName;
+    deleteFile(path)
+}
 
 function deleteFile(path){
     fs.stat(path, function (err, stats) {
@@ -45,5 +49,6 @@ module.exports = {
     deleteSongImage,
     deleteSingerImage,
     deletePlaylistImage,
-    deleteAlbumImage
+    deleteAlbumImage,
+    deleteAvatarUser
 }

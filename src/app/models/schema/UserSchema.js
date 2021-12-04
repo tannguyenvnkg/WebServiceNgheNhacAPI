@@ -11,6 +11,7 @@ const User = new Schema({
     name: String,
     sex: Boolean,
     email: String,
+    avatar: String,
     resetCode: String,
     favoriteSinger: [String],
     followPlaylist: [Playlist],
