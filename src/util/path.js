@@ -5,6 +5,7 @@ const pathSingerImage = path.join(__dirname, '../','public','image','singer','/'
 const pathPlaylistImage = path.join(__dirname, '../','public','image','playlist','/');
 const pathAlbumImage = path.join(__dirname, '../','public','image','album','/');
 const pathUserImage = path.join(__dirname, '../','public','image','avatarUser','/')
+const pathCategoryImage = path.join(__dirname, '../','public','image','category','/')
 
 module.exports = {
     pathSongMusic,
@@ -12,5 +13,6 @@ module.exports = {
     pathSingerImage,
     pathPlaylistImage,
     pathAlbumImage,
-    pathUserImage
+    pathUserImage,
+    pathCategoryImage
 }

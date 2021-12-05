@@ -47,6 +47,19 @@ var storageImageSong = multer.diskStorage({
  
 var uploadImageSong = multer({ storage: storageImageSong })
 //=====================================================================
+//update image song
+var storageImageSongUpdate = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const pathSongImage = path.join(__dirname, '../','public','image','song','/');
+    cb(null, pathSongImage);
+  },
+  filename: function (req, file, cb) {
+    cb(null,  Date.now() + file.originalname )
+  }
+});
+ 
+var updateImageSong = multer({ storage: storageImageSongUpdate })
+//=====================================================================
 //upload image Album
 var storageImageAlbum = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -87,10 +100,14 @@ var storageImageAvatarUser = multer.diskStorage({
 var uploadImageAvatarUser = multer({ storage: storageImageAvatarUser })
 //=====================================================================
 module.exports = {
+  // upload image when insert new item
     uploadImageSinger,
     uploadImagePlaylist,
-    uploadImageSong,
+    uploadImageSong, 
     uploadImageAlbum,
     uploadImageCategory,
-    uploadImageAvatarUser
+    uploadImageAvatarUser,
+
+    // update image when update item image
+    updateImageSong 
 }

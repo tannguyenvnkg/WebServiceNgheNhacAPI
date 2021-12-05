@@ -1,5 +1,6 @@
 const Singer = require('../models/Singer');
 const Song = require('../models/Song');
+const Category = require('../models/Category');
 
 const SongModel = 1;
 const SingerModel = 2;
@@ -102,6 +103,14 @@ class TestController {
         } catch (error) {
             res.json({ error:true, message: error.message, note: 'ID ca sĩ có thể không hợp lệ' });
         }
+    }
+
+    async insertImageCategory(req,res){
+        Category.updateMany({}, {imageCategory : 'http://localhost:3000/image/imagecategory/1637936040486maxresdefault.jpg'},function(err,category){
+            if(!err){
+                res.send('done')
+            }
+        })
     }
 }
 
