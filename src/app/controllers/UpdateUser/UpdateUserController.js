@@ -4,6 +4,9 @@ const Singer = require('../../models/Singer');
 const {removeNewObjectID} = require('../../../util/RemoveNewObjectID');
 const {removeArrayNewObjectID} = require('../../../util/RemoveNewObjectID');
 const Album = require('../../models/Album');
+const {deleteAvatarUser} = require('../../../util/deleteFile'); 
+const { getFileName } = require('../../../util/getFileNameFromLink');
+
 class UpdateUserController{
 
     //[PUT] /updateuser?email="value"&name="value"&sex="value"
@@ -255,6 +258,42 @@ class UpdateUserController{
             res.json({ error:true, message: error.message, note: 'ID ca sĩ hoặc ID User có thể không hợp lệ' });
         }
     }
+
+    //[PUT] /updateuser/UpdateAvatarUser?image="value"&idUser="value"
+    async insertAvatarUser(req, res) {
+        try{
+            console.log('req.file.path: ' + req.file.path);
+            console.log('req.file.pathname: ' + req.file.filename);
+            console.log('req.body.idUser' + req.body.idUser);
+
+            req.body.image = req.protocol + '://' + req.headers.host + '/image/imageuser/' + req.file.filename;
+            console.log(req.body.image)
+            const user = await User.findById(req.body.idUser)
+            if(user){
+                if(user.avatar !== undefined) {
+                    const fileAvatarUser = getFileName(user.avatar)
+                    deleteAvatarUser(fileAvatarUser)
+                }
+                user.avatar = req.body.image
+                user.save(function(err){
+                    if(!err) {
+                        res.json({
+                            error: false,
+                            message: "Thêm hình thành công",
+                            user
+                        })
+                    }
+                    else {
+                        console.log(err);
+                    }
+                })
+            }
+        }
+        catch(error){
+            console.log(error);
+                res.json({ error:true, message: error.message, note: 'ID User có thể không hợp lệ' })
+        }
+    } 
 }
 
 module.exports = new UpdateUserController;
