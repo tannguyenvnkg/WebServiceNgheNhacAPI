@@ -28,7 +28,6 @@ function route(app){
     //================================================================
     
     //json 
-    
     app.use('/search',searchRouter);
     app.use('/ListSong',listSongRouter);
     app.use('/LogIn',logInRouter);
