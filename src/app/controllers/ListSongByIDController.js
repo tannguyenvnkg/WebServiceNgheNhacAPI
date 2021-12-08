@@ -5,55 +5,69 @@ class ListSongByIDController {
     // [GET] /listsong/playlist?playlistId='value'
     index(req,res) {
         const id = req.query.playlistId
-        Song.find({ playlistid : id}, function(err, listSong) {
-            console.log(listSong)
-            if(!err) {
-                if(listSong[0] !== undefined) {
-                    res.json( {
-                        error: false,
-                        message: '',
-                        listSong
-                    })
-                }
-                else {
-                    res.json( {
-                        error: true,
-                        message: 'Không có dữ liệu'
-                    })
-                }
-            }
-            else res.json( {
+        if(!id) {
+            res.json( {
                 error: true,
-                message: err.message
-            });
-        })
+                message: 'ID Playlist trống'
+            })
+        }
+        else {
+            Song.find({ playlistid : id}, function(err, listSong) {
+                if(!err) {
+                    if(listSong[0] !== undefined) {
+                        res.json( {
+                            error: false,
+                            message: '',
+                            listSong
+                        })
+                    }
+                    else {
+                        res.json( {
+                            error: true,
+                            message: 'Playlist này không tồn tại'
+                        })
+                    }
+                }
+                else res.json( {
+                    error: true,
+                    message: err.message
+                });
+            })
+        }
     }
 
     // [GET] /listsong/album?albumId='value'
     getListSongByAlbumId(req,res) {
         const id = req.query.albumId
-        Song.find({ albumid : id}, function(err, listSong) {
-            console.log(listSong)
-            if(!err) {
-                if(listSong[0] !== undefined) {
-                    res.json( {
-                        error: false,
-                        message: '',
-                        listSong
-                    })
-                }
-                else {
-                    res.json( {
-                        error: true,
-                        message: 'Không có dữ liệu'
-                    })
-                }
-            }
-            else res.json( {
+        if(!id) {
+            res.json( {
                 error: true,
-                message: err.message
-            });
-        })
+                message: 'ID Album trống'
+            })
+        }
+        else{
+            Song.find({ albumid : id}, function(err, listSong) {
+                if(!err) {
+                    if(listSong[0] !== undefined) {
+                        res.json( {
+                            error: false,
+                            message: '',
+                            listSong
+                        })
+                    }
+                    else {
+                        res.json( {
+                            error: true,
+                            message: 'Album này không tồn tại'
+                        })
+                    }
+                }
+                else res.json( {
+                    error: true,
+                    message: err.message
+                });
+            })
+        }
     }
 }
 

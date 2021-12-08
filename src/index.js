@@ -11,7 +11,7 @@ db.connect();
 const route = require('./routes');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 //session
 const oneDay = 1000 * 60 * 60 * 24;

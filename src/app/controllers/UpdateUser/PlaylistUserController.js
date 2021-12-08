@@ -172,9 +172,14 @@ class PlaylistUserController{
         }
         else {
             PlaylistUser.findOneAndUpdate({_id: req.query.idPlaylist}, {$set: {playlistName: req.query.namePlaylist}},function(err, playlistUser){
-                if(err) res.json({ error: true, message: err.message });
+                if(!playlistUser){
+                    res.json({error: true, message: 'Play list này không tồn tại'});
+                }
                 else {
+                    if(err) res.json({ error: true, message: err.message });
+                    else {
                     res.json({error: false, message: 'Sửa tên playlist thành Công'});
+                }
                 }
             });
         }

@@ -12,6 +12,7 @@ const updateUserRoute = require('./UpdateUser.route');
 const resetPasswordRoute = require('./ResetPassword.route');
 const albumRoute = require('./Album.route');
 const categoryRoute = require('./ListCategories.route')
+const singerRoute = require('./Singer.route')
 
 
 const testRoute = require('./test.route');
@@ -20,13 +21,14 @@ function route(app){
     
     app.get('/', (req, res) => {
         if(req.session && (req.session.username == undefined)) res.redirect('/admin'); // if admin still not login
-        else res.render('home',{isLogin: true}); // go to home if admin logged
+        else res.render('home',{isLogin: true}); // go to home if admin logged |
     });
     app.use('/admin',adminRouter);
     app.use('/manage',manageRouter);
     //================================================================
     
     //json 
+    
     app.use('/search',searchRouter);
     app.use('/ListSong',listSongRouter);
     app.use('/LogIn',logInRouter);
@@ -39,8 +41,9 @@ function route(app){
     app.use('/ResetPassword',resetPasswordRoute);
     app.use('/Album',albumRoute);
     app.use('/Category',categoryRoute)
+    app.use('/Singer',singerRoute)
 
-    app.use('/testArray', testRoute);
+    app.use('/test', testRoute);
 }
 
 module.exports = route;

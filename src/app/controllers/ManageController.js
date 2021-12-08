@@ -16,6 +16,7 @@ const {deleteSongImage} = require('../../util/deleteFile');
 const {deleteSingerImage} = require('../../util/deleteFile');
 const {deletePlaylistImage} = require('../../util/deleteFile');
 const {deleteAlbumImage} = require('../../util/deleteFile');
+const {deleteCategoryImage} = require('../../util/deleteFile');
 
 class ManageController {
     //===================================================SONG==================================================
@@ -37,7 +38,9 @@ class ManageController {
         if(req.session.messageUpdateSong !== undefined)
             message = req.session.messageUpdateSong 
         if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
-
+        if(!req.params.idSong){
+            res.redirect('/manage/Song')
+        }
         try {
             const song = await Song.findOne({_id: req.params.idSong});
             if(song){
@@ -81,11 +84,73 @@ class ManageController {
                     }
                 });
             }else{ // if there is no song
-                res.redirect('/manage')
+                res.redirect('/manage/Song');
             }
         } catch (error) {
             console.log(error.message);
-            res.redirect('/manage/');
+            res.redirect('/manage/Song');
+        }
+    }
+
+    //[GET] /manage/songImage/:idSong
+    async songImage(req,res){
+        var message = '';
+        if(req.session.messageUpdateSongImage !== undefined)
+            message = req.session.messageUpdateSongImage; 
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        if(!req.params.idSong){
+            res.redirect('/manage/Song');
+        }
+        try {
+            const song = await Song.findOne({_id: req.params.idSong});
+            if(song){
+                const songImageAlt = getFileName(song.image);
+                res.render('manage/ManageSong/updateSongImage',{
+                    isLogin: true,
+                    song: mongooseToObject(song),
+                    message,
+                    songImageAlt
+                });
+            }else{
+                console.log('Không tìm thấy bài hát');
+                res.redirect('/manage/Song');
+            }
+        }
+         catch (error) {
+            console.log(error.message);
+            res.redirect('/manage/Song');
+        }
+    }
+
+    //[PUT] /manage/songImage/updateSongImage
+    async updateSongImage(req, res){
+        try {
+            if(req.body.idSong){
+                const song = await Song.findById(req.body.idSong);
+                if(song){
+                    req.body.image = req.protocol + '://' + req.headers.host + '/image/imageSong/' + req.file.filename;
+                    Song.updateOne({_id: song._id}, req.body)
+                        .then(function (){ // delete old image after update new image
+                            const fileSongImage = getFileName(song.image);
+                            deleteSongImage(fileSongImage);
+
+                            req.session.messageUpdateSongImage = 'Sửa hình bài hát thành công';
+                            res.redirect('/manage/songImage/'+ song._id);
+                        }).catch(function(err){
+                            console.log(err);
+                            req.session.messageUpdateSongImage = 'Sửa hình bài hát Thất bại';
+                            res.redirect('/manage/songImage/'+ song._id);
+                        });
+                }else{
+                    res.redirect('/manage/Song/');
+                }
+            }else{
+                res.redirect('/manage/Song/');
+            }
+        } catch (error) {
+            console.log(error);
+            req.session.messageUpdateSongImage = 'Sửa hình bài hát Thất bại';
+            res.redirect('/manage/songImage/'+ req.body.idSong);
         }
     }
 
@@ -94,8 +159,6 @@ class ManageController {
         try {
             const categories = await Category.find({_id: {$in: req.body.categoryId}});
             const singers = await Singer.find({_id: {$in: req.body.singerId}});
-            // const playlistIds = await Playlist.find({_id: {$in: req.body.playlistId}},'_id');
-            // const albumIds = await Album.find({_id: {$in: req.body.albumId}},'_id');
             console.log(req.body.singerId)
 
             req.body.category = categories;
@@ -198,15 +261,15 @@ class ManageController {
                 req.body.singer = singer;
                 Album.updateOne({_id: req.body.idAlbum}, req.body)
                     .then(function(){
-                        req.session.messageUpdateAlbum = 'Sửa ca sĩ thành công';
+                        req.session.messageUpdateAlbum = 'Sửa playlist thành công';
                         res.redirect('/manage/Album/'+ req.body.idAlbum);
                     })
                     .catch(function(err){
-                        req.session.messageUpdateAlbum = 'Sửa ca sĩ Thất bại';
+                        req.session.messageUpdateAlbum = 'Sửa playlist Thất bại';
                         res.redirect('/manage/Album/'+ req.body.idAlbum);
                     });    
             }else{
-                req.session.messageUpdateAlbum = 'Sửa ca sĩ Thất bại';
+                req.session.messageUpdateAlbum = 'Sửa playlist Thất bại';
                 res.redirect('/manage/Album/'+ req.body.idAlbum);
             }
         } catch (error) {
@@ -243,6 +306,70 @@ class ManageController {
         }
         
     }
+
+    //[GET] /manage/albumImage/:idAlbum
+    async albumImage(req,res){
+        var message = '';
+        if(req.session.messageUpdateAlbumImage !== undefined)
+            message = req.session.messageUpdateAlbumImage; 
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        if(!req.params.idAlbum){
+            res.redirect('/manage/Album');
+        }
+        try {
+            const album = await Album.findOne({_id: req.params.idAlbum});
+            if(album){
+                const albumImageAlt = getFileName(album.imageAlbum);
+                res.render('manage/ManageAlbum/updateAlbumImage',{
+                    isLogin: true,
+                    album: mongooseToObject(album),
+                    message,
+                    albumImageAlt
+                });
+            }else{
+                console.log('Không tìm thấy bài hát');
+                res.redirect('/manage/Album');
+            }
+        }
+         catch (error) {
+            console.log(error.message);
+            res.redirect('/manage/Album');
+        }
+    }
+
+    //[PUT] /manage/albumImage/updateAlbumImage
+    async updateAlbumImage(req, res){
+        try {
+            if(req.body.idAlbum){
+                const album = await Album.findById(req.body.idAlbum);
+                if(album){
+                    req.body.imageAlbum = req.protocol + '://' + req.headers.host + '/image/imageAlbum/' + req.file.filename;
+                    Album.updateOne({_id: album._id}, req.body)
+                        .then(function (){ // delete old image after update new image
+                            const fileAlbumImage = getFileName(album.imageAlbum);
+                            console.log(fileAlbumImage);
+                            deleteAlbumImage(fileAlbumImage);
+
+                            req.session.messageUpdateAlbumImage = 'Sửa hình album thành công';
+                            res.redirect('/manage/albumImage/'+ album._id);
+                        }).catch(function(err){
+                            console.log(err);
+                            req.session.messageUpdateAlbumImage = 'Sửa hình album Thất bại';
+                            res.redirect('/manage/albumImage/'+ album._id);
+                        });
+                }else{
+                    res.redirect('/manage/Album/');
+                }
+            }else{
+                res.redirect('/manage/Album/');
+            }
+        } catch (error) {
+            console.log(error);
+            req.session.messageUpdateAlbumImage = 'Sửa hình album Thất bại';
+            res.redirect('/manage/albumImage/'+ req.body.idAlbum);
+        }
+    }
+    
     //===========================================================================================================
 
     //===================================================SINGER==================================================
@@ -302,6 +429,67 @@ class ManageController {
                 }); 
             }
         });
+    }
+    //[GET] /manage/singerImage/:idSinger
+    async singerImage(req,res){
+        var message = '';
+        if(req.session.messageUpdateSingerImage !== undefined)
+            message = req.session.messageUpdateSingerImage; 
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        if(!req.params.idSinger){
+            res.redirect('/manage/Singer');
+        }
+        try {
+            const singer = await Singer.findOne({_id: req.params.idSinger});
+            if(singer){
+                const singerImageAlt = getFileName(singer.image);
+                res.render('manage/ManageSinger/updateSingerImage',{
+                    isLogin: true,
+                    singer: mongooseToObject(singer),
+                    message,
+                    singerImageAlt
+                });
+            }else{
+                console.log('Không tìm thấy bài hát');
+                res.redirect('/manage/Singer');
+            }
+        }
+         catch (error) {
+            console.log(error.message);
+            res.redirect('/manage/Singer');
+        }
+    }
+
+    //[PUT] /manage/singerImage/updateSingerImage
+    async updateSingerImage(req, res){
+        try {
+            if(req.body.idSinger){
+                const singer = await Singer.findById(req.body.idSinger);
+                if(singer){
+                    req.body.image = req.protocol + '://' + req.headers.host + '/image/imageSinger/' + req.file.filename;
+                    Singer.updateOne({_id: singer._id}, req.body)
+                        .then(function (){ // delete old image after update new image
+                            const fileSingerImage = getFileName(singer.image);
+                            deleteSingerImage(fileSingerImage);
+
+                            req.session.messageUpdateSingerImage = 'Sửa hình ca sĩ thành công';
+                            res.redirect('/manage/singerImage/'+ singer._id);
+                        }).catch(function(err){
+                            console.log(err);
+                            req.session.messageUpdateSingerImage = 'Sửa hình ca sĩ Thất bại';
+                            res.redirect('/manage/singerImage/'+ singer._id);
+                        });
+                }else{
+                    res.redirect('/manage/Singer/');
+                }
+            }else{
+                res.redirect('/manage/Singer/');
+            }
+        } catch (error) {
+            console.log(error);
+            req.session.messageUpdateSingerImage = 'Sửa hình ca sĩ Thất bại';
+            res.redirect('/manage/singerImage/'+ req.body.idSinger);
+        }
     }
     //================================================================================================================
 
@@ -365,6 +553,68 @@ class ManageController {
             }
         });
     }
+
+    //[GET] /manage/playlistImage/:idPlaylist
+    async playlistImage(req,res){
+        var message = '';
+        if(req.session.messageUpdatePlaylistImage !== undefined)
+            message = req.session.messageUpdatePlaylistImage; 
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        if(!req.params.idPlaylist){
+            res.redirect('/manage/Playlist');
+        }
+        try {
+            const playlist = await Playlist.findOne({_id: req.params.idPlaylist});
+            if(playlist){
+                const playlistImageAlt = getFileName(playlist.image);
+                res.render('manage/ManagePlaylist/updatePlaylistImage',{
+                    isLogin: true,
+                    playlist: mongooseToObject(playlist),
+                    message,
+                    playlistImageAlt
+                });
+            }else{
+                console.log('Không tìm thấy bài hát');
+                res.redirect('/manage/Playlist');
+            }
+        }
+         catch (error) {
+            console.log(error.message);
+            res.redirect('/manage/Playlist');
+        }
+    }
+
+    //[PUT] /manage/playlistImage/updatePlaylistImage
+    async updatePlaylistImage(req, res){
+        try {
+            if(req.body.idPlaylist){
+                const playlist = await Playlist.findById(req.body.idPlaylist);
+                if(playlist){
+                    req.body.image = req.protocol + '://' + req.headers.host + '/image/imagePlaylist/' + req.file.filename;
+                    Playlist.updateOne({_id: playlist._id}, req.body)
+                        .then(function (){ // delete old image after update new image
+                            const filePlaylistImage = getFileName(playlist.image);
+                            deletePlaylistImage(filePlaylistImage);
+
+                            req.session.messageUpdatePlaylistImage = 'Sửa hình playlist thành công';
+                            res.redirect('/manage/playlistImage/'+ playlist._id);
+                        }).catch(function(err){
+                            console.log(err);
+                            req.session.messageUpdatePlaylistImage = 'Sửa hình playlist Thất bại';
+                            res.redirect('/manage/playlistImage/'+ playlist._id);
+                        });
+                }else{
+                    res.redirect('/manage/Playlist/');
+                }
+            }else{
+                res.redirect('/manage/Playlist/');
+            }
+        } catch (error) {
+            console.log(error);
+            req.session.messageUpdatePlaylistImage = 'Sửa hình playlist Thất bại';
+            res.redirect('/manage/playlistImage/'+ req.body.idPlaylist);
+        }
+    }
     
     //================================================================================================================
 
@@ -424,6 +674,69 @@ class ManageController {
                 }); 
             }
         });
+    }
+
+    //[GET] /manage/categoryImage/:idCategory
+    async categoryImage(req,res){
+        var message = '';
+        if(req.session.messageUpdateCategoryImage !== undefined)
+            message = req.session.messageUpdateCategoryImage; 
+        if(req.session && (req.session.username == undefined)) res.redirect('/admin/login'); // if admin still not login
+        if(!req.params.idCategory){
+            res.redirect('/manage/Category');
+        }
+        try {
+            const category = await Category.findOne({_id: req.params.idCategory});
+            if(category){
+                const categoryImageAlt = getFileName(category.imageCategory);
+                res.render('manage/ManageCategory/updateCategoryImage',{
+                    isLogin: true,
+                    category: mongooseToObject(category),
+                    message,
+                    categoryImageAlt
+                });
+            }else{
+                console.log('Không tìm thấy bài hát');
+                res.redirect('/manage/Category');
+            }
+        }
+         catch (error) {
+            console.log(error.message);
+            res.redirect('/manage/Category');
+        }
+    }
+
+    //[PUT] /manage/categoryImage/updateCategoryImage
+    async updateCategoryImage(req, res){
+        try {
+            if(req.body.idCategory){
+                const category = await Category.findById(req.body.idCategory);
+                if(category){
+                    req.body.imageCategory = req.protocol + '://' + req.headers.host + '/image/imageCategory/' + req.file.filename;
+                    Category.updateOne({_id: category._id}, req.body)
+                        .then(function (){ // delete old image after update new image
+                            const fileCategoryImage = getFileName(category.imageCategory);
+                            console.log(fileCategoryImage);
+                            deleteCategoryImage(fileCategoryImage);
+
+                            req.session.messageUpdateCategoryImage = 'Sửa hình thể loại thành công';
+                            res.redirect('/manage/categoryImage/'+ category._id);
+                        }).catch(function(err){
+                            console.log(err);
+                            req.session.messageUpdateCategoryImage = 'Sửa hình thể loại Thất bại';
+                            res.redirect('/manage/categoryImage/'+ category._id);
+                        });
+                }else{
+                    res.redirect('/manage/Category/');
+                }
+            }else{
+                res.redirect('/manage/Category/');
+            }
+        } catch (error) {
+            console.log(error);
+            req.session.messageUpdateCategoryImage = 'Sửa hình thể loại Thất bại';
+            res.redirect('/manage/categoryImage/'+ req.body.idCategory);
+        }
     }
     //================================================================================================================
 }

@@ -25,18 +25,22 @@ class LoadPlayListController {
     // [GET] /PlayList/getPlaylistByCategoryId?CategoryId='value'
     async getPlayListByIDCategory (req,res) {
         try{
-            if(req.query.CategoryId){
+            if(!req.query.CategoryId){
+                res.json({ error: true, message: 'ID thể loại trống'});
+            }
+            else {
                 const listPlayList = await Playlist.find({"category._id" : req.query.CategoryId });
-                if (listPlayList) {
-                    res.json({ error: false, message: '', listPlayList});
+                if (!listPlayList[0]) {
+                    res.json({ error: true, message: 'Thể loại này không tồn tại'});
                 }
                 else {
-                    res.json({ error: true, message: 'Lỗi không thể lấy được danh sách Playlist'});
+                    res.json({ error: false, message: '', listPlayList});
                 }
             }
         }
         catch (error) {
-            res.json({ error: true, message: err.message });
+            res.json({ error: true, message: "Sai id Thể Loại" });
+            console.log(error.message);
         }
     }
     

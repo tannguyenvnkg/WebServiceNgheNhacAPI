@@ -5,6 +5,7 @@ const updateUserController = require('../app/controllers/UpdateUser/UpdateUserCo
 const updateUserPasswordController = require('../app/controllers/UpdateUser/UpdateUserPasswordController');
 const playlistUserController = require('../app/controllers/UpdateUser/PlaylistUserController');
 
+const {uploadImageAvatarUser} = require('./Upload.multer')
 
 router.get('/LoadPlaylistUser',playlistUserController.loadPlaylistUser);
 router.delete('/RemovePlaylistUser',playlistUserController.removePlaylistUser);
@@ -12,10 +13,10 @@ router.delete('/RemoveSongFromPlaylistUser',playlistUserController.removeSongFro
 router.post('/AddNewSongToPlaylistUser',playlistUserController.addNewSongToPlaylistUser);
 router.post('/CreatePlaylistUser',playlistUserController.createPlaylistUser);
 router.get('/ShowSongFromPlaylistUser',playlistUserController.showSongFromPlaylistUser);
-router.put('/UpdateNameFromPlaylistUser',playlistUserController.updateNameFromPlaylistUser)
+router.put('/UpdateNameFromPlaylistUser',playlistUserController.updateNameFromPlaylistUser);
+router.put('/UpdateAvatarUser',uploadImageAvatarUser.single('image'),updateUserController.insertAvatarUser);
 
 router.put('/UpdatePassword',updateUserPasswordController.index);
-
 
 router.put('/RemoveFavoriteSinger',updateUserController.removeFavoriteSinger); // this method is called on phone
 router.put('/AddFavoriteSinger',updateUserController.addFavoriteSinger); // this method is called on phone

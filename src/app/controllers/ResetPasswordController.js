@@ -2,7 +2,7 @@ const User = require('../models/User');
 const {sendEmailResetPassword} = require('../../util/sendEmail');
 class ResetPasswordController {
 
-    // [PUT] /ResetPassword?email='?' or /ResetPassword/ReceiveEmail?email='?'
+    // [PUT] /ResetPassword/ReceiveEmail?email='?' or /ResetPassword/ReceiveEmail?email='?'
     receiveEmail(req, res) {
         const resetCode = Math.floor(100000 + Math.random() * 900000); // generate random code
         User.findOneAndUpdate({ email: req.query.email}, {resetCode}).exec(function(err, user) {

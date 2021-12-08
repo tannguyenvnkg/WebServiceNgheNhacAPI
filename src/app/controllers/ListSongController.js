@@ -5,7 +5,6 @@ class ListSongController {
     // [GET] /listsong
     index(req, res) {
         console.log('session : ' + req.session.id);
-        if(Object.keys(req.query).length === 0) console.log('không có tham số truyền vào');
         Song.find({}, function (err, listSong) {
             if(!err) res.json( {
                 error: false,
@@ -35,7 +34,7 @@ class ListSongController {
             }
         } catch (error) {
             console.log(error);
-            res.json({ error:true, message: error.message, note: 'ID ca sĩ có thể không hợp lệ' });
+            res.json({ error:true, message: 'ID ca sĩ có thể không hợp lệ', note: error.message});
         }
     }
 
