@@ -103,7 +103,7 @@ class PlaylistUserController{
             res.json({error: true, message: 'Lỗi Id Playlist bị trống'});
         }else{
             PlaylistUser.findOneAndDelete({_id: req.query.idPlaylist}).exec(function(err,playlistUser) {
-                if(err) res.json({error: true, message: err.message });
+                if(err) res.json({error: true, message: 'Id playlist không hợp lệ', note: err.message });
                 else if(!playlistUser){
                     res.json({error: true, message: 'Lỗi playlist không tồn tại'});
                 }else{
@@ -123,7 +123,7 @@ class PlaylistUserController{
         }else{
             PlaylistUser.findOne({_id: req.query.idPlaylist}).exec(function(err, playlistUser){
                 Song.findOne({_id: req.query.idSong}).exec(function(err, song){
-                    if(err) res.json({error: true, message: err.message });
+                    if(err) res.json({error: true, message: 'Id bài hát hoặc Id playlist không hợp lệ',note: err.message });
                     else if(!playlistUser){
                         res.json({error: true, message: 'Lỗi playlist không tồn tại'});
                     }
@@ -149,7 +149,7 @@ class PlaylistUserController{
         }
         else {
             PlaylistUser.findOne({_id: req.query.idPlaylist}).exec(function(err, playlistUser) {
-                if(err) res.json({ error: true, message: err.message });
+                if(err) res.json({ error: true, message: 'Id playlist không hợp lệ', note: err.message });
                 else {
                     if(!playlistUser) {
                         res.json({error: true, message: 'Lỗi Id Playlist chưa được tạo'});
@@ -172,7 +172,7 @@ class PlaylistUserController{
         }
         else {
             PlaylistUser.findOneAndUpdate({_id: req.query.idPlaylist}, {$set: {playlistName: req.query.namePlaylist}},function(err, playlistUser){
-                if(err) res.json({ error: true, message: err.message });
+                if(err) res.json({ error: true, message: 'Id Playlist user không hợp lệ', note: err.message });
                 else {
                     res.json({error: false, message: 'Sửa tên playlist thành Công'});
                 }

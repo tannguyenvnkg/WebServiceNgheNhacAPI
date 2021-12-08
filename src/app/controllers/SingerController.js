@@ -21,7 +21,7 @@ class AdminController {
             }
         } catch (error) {
             console.log(error);
-            res.json({ error: true, message: error.message, note: 'Singer ID không hợp lệ !!!' });
+            res.json({ error: true, message: 'Singer ID không hợp lệ !!!', note: error.message });
         }
     }   
 
@@ -41,7 +41,7 @@ class AdminController {
                 }
             }
         } catch (error) {
-            res.json({ error: true, message: error.message, note: 'Singer ID không hợp lệ !!!' });
+            res.json({ error: true, message: 'Singer ID không hợp lệ !!!', note: error.message });
         }
     }
     

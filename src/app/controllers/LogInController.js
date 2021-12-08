@@ -6,8 +6,6 @@ class LogInController {
     index(req, res) {
         const taikhoan = req.query.username;
         const mk = req.query.password;
-        console.log(taikhoan);
-        console.log(mk);
         User.findOne({
             $or:[
                 {username: taikhoan},

@@ -38,7 +38,7 @@ class AlbumController {
                 res.json({ error: true, message: 'Vui lòng điền ID ca sĩ' });
             }
         } catch (error) {
-            res.json({ error: true, message: error.message, note: 'ID ca sĩ có thể không tồn tại' });
+            res.json({ error: true, message: 'ID ca sĩ có thể không tồn tại', note:  error.message});
         }
     }
 
@@ -65,7 +65,7 @@ class AlbumController {
                 res.json({ error:true, message: 'Không tìm thấy Ca sĩ' });
             }
         } catch (error) {
-            res.json({ error:true, message: error.message, note: 'ID ca sĩ có thể không hợp lệ' });
+            res.json({ error:true, message: 'ID ca sĩ có thể không hợp lệ', note: error.message});
         }
         
     }
@@ -87,7 +87,7 @@ class AlbumController {
                 res.json({ error:true, message: 'Không tìm thấy Album' });
             }
         } catch (error) {
-            res.json({ error:true, message: error.message, note: 'ID Album có thể không hợp lệ' });
+            res.json({ error:true, message: 'ID Album có thể không hợp lệ', note: error.message });
         }
     }
 }

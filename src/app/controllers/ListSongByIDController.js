@@ -6,7 +6,6 @@ class ListSongByIDController {
     index(req,res) {
         const id = req.query.playlistId
         Song.find({ playlistid : id}, function(err, listSong) {
-            console.log(listSong)
             if(!err) {
                 if(listSong[0] !== undefined) {
                     res.json( {
@@ -33,7 +32,6 @@ class ListSongByIDController {
     getListSongByAlbumId(req,res) {
         const id = req.query.albumId
         Song.find({ albumid : id}, function(err, listSong) {
-            console.log(listSong)
             if(!err) {
                 if(listSong[0] !== undefined) {
                     res.json( {

@@ -35,7 +35,7 @@ class ListSongController {
             }
         } catch (error) {
             console.log(error);
-            res.json({ error:true, message: error.message, note: 'ID ca sĩ có thể không hợp lệ' });
+            res.json({ error:true, message: 'ID ca sĩ có thể không hợp lệ', note: error.message});
         }
     }
 

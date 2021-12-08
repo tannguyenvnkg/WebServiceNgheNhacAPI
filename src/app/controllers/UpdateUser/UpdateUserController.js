@@ -47,112 +47,135 @@ class UpdateUserController{
 
     //[PUT] /updateuser/AddLoveOrRemovePlaylist?userId='?'&playlistId='?'&status='boolean'
     addLovePlaylist(req, res){
-        const playlistId = req.query.playlistId;
-        const userId = req.query.userId;
-        const status = req.query.status.toLowerCase() === 'true';
-        Playlist.findById(playlistId).exec(function(err, playlist){
-            if(playlist === null || playlist === undefined){
-                res.json({error: true, message: 'Playlist không tồn tại'});
-            }
-            else {
-                if(status){ // add playlist to favorites list
-                    var isAlreadyExistPlaylist = false; // if user has already added a playlist to their favorites playlist
-                    User.findOne({_id: userId}).exec(function(err, user){
-                        if(!user) res.json({error: true, message: 'User không tồn tại'});
-                        else{
-                            user.followPlaylist.forEach(function(playlist){ 
-                                if(removeNewObjectID(playlist._id.toString()) === playlistId){
-                                    isAlreadyExistPlaylist = true;
-                                }
-                            });
-
-                            if(isAlreadyExistPlaylist){
-                                res.json({error: true, message: 'Playlist này đã có trong mục ưa thích '});
-                            }else{
-                                User.findOneAndUpdate({ _id: userId }, {$push: {followPlaylist: playlist}}).exec(function(err, user){
-                                    if(err) res.json({ error: true, message: err.message });
-                                    // else if(user === undefined || user === null){
-                                    //     res.json({ error: true, message: 'Người dùng không tồn tại' });
-                                    // }
-                                    else {
-                                        User.findOne({ _id: userId }).exec(function(err, user){
-                                            res.json({ error: false, message: 'Đã thêm vào playlist ưa thích', user});
-                                        });
+        if(!req.query.playlistId){
+            res.json({ error: true, message: 'Playlist Id không được để trống'});
+        }
+        else if(!req.query.userId){
+            res.json({ error: true, message: 'User Id không được để trống'});
+        }
+        else if(!req.query.status){
+            res.json({ error: true, message: 'status không được để trống'});
+        }else{
+            console.log(req.query.status)
+            console.log(req.query.userId)
+            console.log(req.query.playlistId)
+            const playlistId = req.query.playlistId;
+            const userId = req.query.userId;
+            const status = req.query.status.toLowerCase() === 'true';
+            Playlist.findById(playlistId).exec(function(err, playlist){
+                if(playlist === null || playlist === undefined){
+                    res.json({error: true, message: 'Playlist không tồn tại'});
+                }
+                else {
+                    if(status){ // add playlist to favorites list
+                        var isAlreadyExistPlaylist = false; // if user has already added a playlist to their favorites playlist
+                        User.findOne({_id: userId}).exec(function(err, user){
+                            if(!user) res.json({error: true, message: 'User không tồn tại'});
+                            else{
+                                user.followPlaylist.forEach(function(playlist){ 
+                                    if(removeNewObjectID(playlist._id.toString()) === playlistId){
+                                        isAlreadyExistPlaylist = true;
                                     }
                                 });
+
+                                if(isAlreadyExistPlaylist){
+                                    res.json({error: true, message: 'Playlist này đã có trong mục ưa thích '});
+                                }else{
+                                    User.findOneAndUpdate({ _id: userId }, {$push: {followPlaylist: playlist}}).exec(function(err, user){
+                                        if(err) res.json({ error: true, message: err.message });
+                                        // else if(user === undefined || user === null){
+                                        //     res.json({ error: true, message: 'Người dùng không tồn tại' });
+                                        // }
+                                        else {
+                                            User.findOne({ _id: userId }).exec(function(err, user){
+                                                res.json({ error: false, message: 'Đã thêm vào playlist ưa thích', user});
+                                            });
+                                        }
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                    else{ // remove favorite playlist
+                        User.findOneAndUpdate({ _id: userId }, {$pull: {followPlaylist: {_id: playlist._id}}}).exec(function(err, user){
+                            if(err) res.json({ error: true, message: err.message });
+                            else if(user === undefined || user === null){
+                                res.json({ error: true, message: 'Người dùng không tồn tại' });
+                            }else {
+                                User.findOne({ _id: userId }).exec(function(err, user){
+                                    res.json({ error: false, message: 'Đã xóa khỏi playlist ưa thích', user});
+                                });
+                            }
+                        });
+                    }
                 }
-                else{ // remove favorite playlist
-                    User.findOneAndUpdate({ _id: userId }, {$pull: {followPlaylist: {_id: playlist._id}}}).exec(function(err, user){
-                        if(err) res.json({ error: true, message: err.message });
-                        else if(user === undefined || user === null){
-                            res.json({ error: true, message: 'Người dùng không tồn tại' });
-                        }else {
-                            User.findOne({ _id: userId }).exec(function(err, user){
-                                res.json({ error: false, message: 'Đã xóa khỏi playlist ưa thích', user});
-                            });
-                        }
-                    });
-                }
-            }
-        });
+            });
+        }
     }
 
     //[PUT] /updateuser/AddLoveOrRemoveAlbum?userId='?'&albumId='?'status='boolean'
     addLoveAlbum(req, res){
-        const albumId = req.query.albumId;
-        const userId = req.query.userId;
-        const status = req.query.status.toLowerCase() === 'true';
-        Album.findById(albumId).exec(function(err, album){
-            if(album === null || album === undefined){
-                res.json({error: true, message: 'album không tồn tại'});
-            }
-            else {
-                if(status){ // add album to favorites list
-                    var isAlreadyExistAlbum = false; // if user has already added a album to their favorites album
-                    User.findOne({_id: userId}).exec(function(err, user){
-                        if(!user) res.json({error: true, message: 'User không tồn tại'});
-                        else{
-                            user.followAlbum.forEach(function(album){ 
-                                if(removeNewObjectID(album._id.toString()) === albumId){
-                                    isAlreadyExistAlbum = true;
-                                }
-                            });
-
-                            if(isAlreadyExistAlbum){
-                                res.json({error: true, message: 'Album này đã có trong mục ưa thích '});
-                            }else{
-                                User.findOneAndUpdate({ _id: userId }, {$push: {followAlbum : album}}).exec(function(err, user){
-                                    if(err) res.json({ error: true, message: err.message });
-                                    // else if(user === undefined || user === null){
-                                    //     res.json({ error: true, message: 'Người dùng không tồn tại' });
-                                    // }
-                                    else {
-                                        User.findOne({ _id: userId }).exec(function(err, user){
-                                            res.json({ error: false, message: 'Đã thêm vào playlist ưa thích', user});
-                                        });
+        if(!req.query.albumId){
+            res.json({ error: true, message: 'Album Id không được để trống'});
+        }
+        else if(!req.query.userId){
+            res.json({ error: true, message: 'User Id không được để trống'});
+        }
+        else if(!req.query.status){
+            res.json({ error: true, message: 'status không được để trống'});
+        }else{
+            const albumId = req.query.albumId;
+            const userId = req.query.userId;
+            const status = req.query.status.toLowerCase() === 'true';
+            Album.findById(albumId).exec(function(err, album){
+                if(album === null || album === undefined){
+                    res.json({error: true, message: 'album không tồn tại'});
+                }
+                else {
+                    if(status){ // add album to favorites list
+                        var isAlreadyExistAlbum = false; // if user has already added a album to their favorites album
+                        User.findOne({_id: userId}).exec(function(err, user){
+                            if(!user) res.json({error: true, message: 'User không tồn tại'});
+                            else{
+                                user.followAlbum.forEach(function(album){ 
+                                    if(removeNewObjectID(album._id.toString()) === albumId){
+                                        isAlreadyExistAlbum = true;
                                     }
                                 });
+
+                                if(isAlreadyExistAlbum){
+                                    res.json({error: true, message: 'Album này đã có trong mục ưa thích '});
+                                }else{
+                                    User.findOneAndUpdate({ _id: userId }, {$push: {followAlbum : album}}).exec(function(err, user){
+                                        if(err) res.json({ error: true, message: err.message });
+                                        // else if(user === undefined || user === null){
+                                        //     res.json({ error: true, message: 'Người dùng không tồn tại' });
+                                        // }
+                                        else {
+                                            User.findOne({ _id: userId }).exec(function(err, user){
+                                                res.json({ error: false, message: 'Đã thêm vào playlist ưa thích', user});
+                                            });
+                                        }
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                    else{ // remove favorite playlist
+                        User.findOneAndUpdate({ _id: userId }, {$pull: {followAlbum: {_id: album._id}}}).exec(function(err, user){
+                            if(err) res.json({ error: true, message: err.message });
+                            else if(user === undefined || user === null){
+                                res.json({ error: true, message: 'Người dùng không tồn tại' });
+                            }else {
+                                User.findOne({ _id: userId }).exec(function(err, user){
+                                    res.json({ error: false, message: 'Đã xóa khỏi playlist ưa thích', user});
+                                });
+                            }
+                        });
+                    }
                 }
-                else{ // remove favorite playlist
-                    User.findOneAndUpdate({ _id: userId }, {$pull: {followAlbum: {_id: album._id}}}).exec(function(err, user){
-                        if(err) res.json({ error: true, message: err.message });
-                        else if(user === undefined || user === null){
-                            res.json({ error: true, message: 'Người dùng không tồn tại' });
-                        }else {
-                            User.findOne({ _id: userId }).exec(function(err, user){
-                                res.json({ error: false, message: 'Đã xóa khỏi playlist ưa thích', user});
-                            });
-                        }
-                    });
-                }
-            }
-        });
+            });
+        }
     }
 
     //[PUT] /updateuser/removeFavoriteSinger?singerid='values'&userid='values'
@@ -185,7 +208,7 @@ class UpdateUserController{
             }
         } catch (error) {
             console.log(error);
-            res.json({ error:true, message: error.message, note: 'ID ca sĩ hoặc ID User có thể không hợp lệ' });
+            res.json({ error:true, message: 'ID ca sĩ hoặc ID User có thể không hợp lệ', note: error.message });
         }
     }
 
@@ -219,7 +242,7 @@ class UpdateUserController{
             }
         } catch (error) {
             console.log(error);
-            res.json({ error:true, message: error.message, note: 'ID ca sĩ hoặc ID User có thể không hợp lệ' });
+            res.json({ error:true, message: 'ID ca sĩ hoặc ID User có thể không hợp lệ', note: error.message });
         }
     }
 
@@ -255,7 +278,7 @@ class UpdateUserController{
                 }
             }
         } catch (error) {
-            res.json({ error:true, message: error.message, note: 'ID ca sĩ hoặc ID User có thể không hợp lệ' });
+            res.json({ error:true, message: 'ID ca sĩ hoặc ID User có thể không hợp lệ', note: error.message});
         }
     }
 
