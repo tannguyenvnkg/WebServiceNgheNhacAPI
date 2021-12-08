@@ -21,13 +21,14 @@ function route(app){
     
     app.get('/', (req, res) => {
         if(req.session && (req.session.username == undefined)) res.redirect('/admin'); // if admin still not login
-        else res.render('home',{isLogin: true}); // go to home if admin logged
+        else res.render('home',{isLogin: true}); // go to home if admin logged |
     });
     app.use('/admin',adminRouter);
     app.use('/manage',manageRouter);
     //================================================================
     
     //json 
+    
     app.use('/search',searchRouter);
     app.use('/ListSong',listSongRouter);
     app.use('/LogIn',logInRouter);

@@ -5,7 +5,6 @@ class ListSongController {
     // [GET] /listsong
     index(req, res) {
         console.log('session : ' + req.session.id);
-        if(Object.keys(req.query).length === 0) console.log('không có tham số truyền vào');
         Song.find({}, function (err, listSong) {
             if(!err) res.json( {
                 error: false,
